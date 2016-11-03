@@ -34,15 +34,6 @@
       compile project(':react-native-hypertrack')
   	```
 
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNHyperTrack.sln` in `node_modules/react-native-hypertrack/windows/RNHyperTrack.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using Cl.Json.RNHyperTrack;` to the usings at the top of the file
-  - Add `new RNHyperTrackPackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
-
 ## Usage
 ```javascript
 import RNHyperTrack from 'react-native-hypertrack';
