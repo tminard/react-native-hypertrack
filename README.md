@@ -13,17 +13,52 @@ $ react-native link react-native-hypertrack
 If you are using an older version of React Native that does not support `link`, you can [manually link](https://facebook.github.io/react-native/docs/linking-libraries-ios.html) libraries.
 
 ### Android setup
-To use the HyperTrack Android SDKs, the following urls need to be added to your `android/build.gradle` file. This will configure the repository urls for the SDKs.
+1. To use the HyperTrack Android SDKs, the following urls need to be added to your `android/build.gradle` file. This will configure the repository urls for the SDKs.
 
-```
-allprojects {
-    repositories {
-        ...
-        maven { url 'http://hypertrack-android-sdk.s3-website-us-west-2.amazonaws.com/' }
-        maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
+        ```
+        allprojects {
+            repositories {
+                ...
+                maven { url 'http://hypertrack-android-sdk.s3-website-us-west-2.amazonaws.com/' }
+                maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
+            }
+        }
+        ```
+
+2. Include this module in your `android/settings.gradle`:
+
+    ```
+    include ':react-native-hypertrack'
+    project(':react-native-hypertrack').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-hypertrack/android')
+    include ':app'
+    ```
+
+3. Add a dependency to your app build in `android/app/build.gradle`:
+
+    ```
+    dependencies {
+       ...
+       compile project(':react-native-hypertrack')
     }
-}
-```
+    ```
+
+4. Change your main application to add a new package, in `android/app/src/main/.../MainApplication.java`:
+
+    ```java
+    import com.reactlibrary.RNHyperTrackPackage; // Add new import
+
+    public class MainApplication extends Application implements ReactApplication {
+      ...
+
+      @Override
+      protected List<ReactPackage> getPackages() {
+        return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new RNHyperTrackPackage() // Add the package here
+        );
+      }
+    }
+    ```
 
 ## Usage
 ```javascript
