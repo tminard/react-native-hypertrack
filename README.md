@@ -50,6 +50,7 @@ allprojects {
     repositories {
         ...
         maven { url 'http://hypertrack-android-sdk.s3-website-us-west-2.amazonaws.com/' }
+        maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
     }
 }
 ```
