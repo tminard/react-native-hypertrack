@@ -55,3 +55,12 @@ import RNHyperTrack from 'react-native-hypertrack';
 // TODO: What do with the module?
 RNHyperTrack;
 ```
+
+## Documentation
+The HyperTrack documentation is at [docs.hypertrack.io](http://docs.hypertrack.io/).
+
+## Support
+For any questions, please reach out to us on [Slack](http://docs.hypertrack.io/) or on help@hypertrack.io. Please create an [issue](https://github.com/hypertrack/hypertrack-cordova/issues) for bugs or feature requests.
+
+## Acknowledgements
+Thanks to [react-native-create-library](https://github.com/frostney/react-native-create-library) which saved a few hours.
