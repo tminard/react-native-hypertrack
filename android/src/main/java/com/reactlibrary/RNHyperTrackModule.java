@@ -13,6 +13,9 @@ import com.facebook.react.bridge.Callback;
 import java.util.Map;
 import java.util.HashMap;
 
+import io.hypertrack.lib.common.HyperTrack;
+import io.hypertrack.lib.transmitter.service.HTTransmitterService;
+
 public class RNHyperTrackModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
@@ -23,6 +26,9 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   public RNHyperTrackModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+
+    HyperTrack.setPublishableApiKey("ACCOUNT_PK", getReactApplicationContext());
+    HTTransmitterService.initHTTransmitter(getReactApplicationContext());
   }
 
   @Override
