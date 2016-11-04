@@ -42,3 +42,14 @@ import RNHyperTrack from 'react-native-hypertrack';
 RNHyperTrack;
 ```
   
+## URL config in gradle
+In `android/build.gradle` add the following
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'http://hypertrack-android-sdk.s3-website-us-west-2.amazonaws.com/' }
+    }
+}
+```
