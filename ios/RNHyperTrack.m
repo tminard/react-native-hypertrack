@@ -1,5 +1,6 @@
 
 #import "RNHyperTrack.h"
+#import <HTTransmitter/HTTransmitter.h>
 
 @implementation RNHyperTrack
 
@@ -10,4 +11,3 @@
 RCT_EXPORT_MODULE()
 
 @end
-  
