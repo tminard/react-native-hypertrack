@@ -18,4 +18,9 @@ RCT_EXPORT_METHOD(startTrip:(NSString *)name location:(NSString *)location)
   HTTripParams* tripParams = [[HTTripParams alloc] init];
 }
 
+RCT_EXPORT_METHOD(completeTask:(NSString *)taskId callback:(RCTResponseSenderBlock)callback)
+{
+  RCTLogInfo(@"Pretending to create an event %@ at %@", name);
+}
+
 @end

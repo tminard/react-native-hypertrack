@@ -50,6 +50,11 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void startTrip(String driverId, String taskId) {
+    // TODO
+  }
+
+  @ReactMethod
   public void completeTask(String taskID, final Callback callback) {
       Context context = getReactApplicationContext();
       HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
