@@ -4,16 +4,18 @@ import { NativeModules } from 'react-native';
 const { RNHyperTrack } = NativeModules;
 
 module.exports = {
-	showToast(message: string, duration: double = 2000) {
-		RNHyperTrack.show(message, duration);
-	},
-	testMessage() {
-		return "React Native HyperTrack SDK!";
-	},
-    startTrip(name, location) {
-        RNHyperTrack.startTrip(name, location);
+    // Method to start trip in driver SDK
+    startTrip(driverId, taskIds, success, failure) {
+        RNHyperTrack.startTrip(driverId, taskIds, success, failure);
     },
-	completeTask(taskId, callback) {
-		RNHyperTrack.completeTask(taskId, callback);
-	}
+
+    // Method to complete task in driver SDK
+    completeTask(taskId, success, failure) {
+        RNHyperTrack.completeTask(taskId, success, failure);
+    },
+
+    // Method to end task in driver SDK
+    endTrip(tripId, success, failure) {
+        RNHyperTrack.endTrip(taskId, success, failure);
+    },
 }

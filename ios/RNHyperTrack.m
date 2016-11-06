@@ -1,6 +1,5 @@
 
 #import "RNHyperTrack.h"
-#import "RCTLog.h"
 #import <HTTransmitter/HTTransmitter.h>
 
 @implementation RNHyperTrack
@@ -9,18 +8,29 @@
 {
     return dispatch_get_main_queue();
 }
+
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(startTrip:(NSString *)name location:(NSString *)location)
+RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
+                           :(NSArray *)taskIds
+                           :(RCTResponseSenderBlock)successCallback
+                           :(RCTResponseSenderBlock)failureCallback)
 {
-  RCTLogInfo(@"Pretending to create an event %@ at %@", name, location);
-
   HTTripParams* tripParams = [[HTTripParams alloc] init];
 }
 
-RCT_EXPORT_METHOD(completeTask:(NSString *)taskId callback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(completeTask:(NSString *)taskId
+                              :(RCTResponseSenderBlock)successCallback
+                              :(RCTResponseSenderBlock)failureCallback)
 {
-  RCTLogInfo(@"Pretending to create an event %@ at %@", name);
+  // 
+}
+
+RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
+                         :(RCTResponseSenderBlock)successCallback
+                         :(RCTResponseSenderBlock)failureCallback)
+{
+  //
 }
 
 @end
