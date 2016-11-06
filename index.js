@@ -10,6 +10,9 @@ module.exports = {
 	testMessage() {
 		return "React Native HyperTrack SDK!";
 	},
+    startTrip(name, location) {
+        RNHyperTrack.startTrip(name, location);
+    }
 	completeTask(taskId, callback) {
 		RNHyperTrack.completeTask(taskId, callback);
 	}
