@@ -71,11 +71,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startTrip(String driverId, String taskId) {
-    // TODO
-  }
-
-  @ReactMethod
   public void startTrip(String driverID, ReadableArray taskIDList, final Callback successCallback, final Callback failureCallback) {
       Context context = getReactApplicationContext();
       HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
@@ -100,13 +95,11 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                   result.putBoolean("is_offline", isOffline);
                   result.putString("trip", tripJson);
 
-                  Toast.makeText(getReactApplicationContext(), "Start Trip success", 3000).show();
                   successCallback.invoke(result);
               } catch (Exception e) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", e.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
                   failureCallback.invoke(result);
               }
           }
@@ -121,13 +114,11 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                       result.putString("error", error.toString());
                   }
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
                   failureCallback.invoke(result);
               } catch (Exception e) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", e.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
                   failureCallback.invoke(result);
               }
           }
@@ -150,13 +141,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                    result.putBoolean("is_offline", isOffline);
                    result.putString("trip", tripJson);
 
-                   Toast.makeText(getReactApplicationContext(), "Trip successfully ended", 3000).show();
+
                    successCallback.invoke(result);
                } catch (Exception e) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", e.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
                   failureCallback.invoke(result);
                }
            }
@@ -171,13 +161,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                        result.putString("error", e.toString());
                    }
 
-                   Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
+
                    failureCallback.invoke(result);
                } catch (Exception exception) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", exception.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
                   failureCallback.invoke(result);
                }
            }
@@ -196,13 +185,11 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                   WritableMap result = Arguments.createMap();
                   result.putString("task_id", taskID);
 
-                  Toast.makeText(getReactApplicationContext(), "Task successfully completed", 3000).show();
                   successCallback.invoke(result);
               } catch (Exception e) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", e.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
                   successCallback.invoke(result);
               }
           }
@@ -217,13 +204,11 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                       result.putString("error", e.toString());
                   }
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
                   failureCallback.invoke(result);
               } catch (Exception exception) {
                   WritableMap result = Arguments.createMap();
                   result.putString("error", exception.toString());
 
-                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
                   failureCallback.invoke(result);
               }
           }
