@@ -60,6 +60,9 @@ If you are using an older version of React Native that does not support `link`, 
     }
     ```
 
+### iOS setup
+![Linked frameworks and libraries](readme-imgs/linker.png)
+
 ## Usage
 ```javascript
 import RNHyperTrack from 'react-native-hypertrack';
