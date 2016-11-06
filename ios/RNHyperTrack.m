@@ -23,10 +23,11 @@ RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
     [[HTTransmitterClient sharedClient] startTripWithTripParams:tripParams completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
         if (error) {
             // Handle error and try again.
-            failureCallback(@[]);
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
         } else {
             // If there is no error, use the tripID received in the callback in your app.
-            successCallback(@[]);
+            successCallback(@[success]);
         }
     }];
 }
@@ -40,7 +41,8 @@ RCT_EXPORT_METHOD(completeTask:(NSString *)taskId
 
         if (error) {
             // Handle error and try again.
-            failureCallback(@[]);
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
         } else {
             // If there is no error, use the taskID received in the callback in your app.
             successCallback(@[]);
@@ -52,16 +54,17 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
 {
-    // [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
-
-        // if (error) {
+    [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
+        
+        if (error) {
             // Handle error and try again.
-            // failureCallback(@[]);
-        // } else {
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
+        } else {
             // If there is no error, use the trip received in the callback in your app.
-            // successCallback(@[]);
-        // }
-    // }];
+            successCallback(@[]);
+        }
+    }];
 }
 
 @end
