@@ -4,7 +4,7 @@ import { NativeModules } from 'react-native';
 const { RNHyperTrack } = NativeModules;
 
 module.exports = {
-    // Method to intialize driver SDK with token
+    // Method to intialize driver SDK with token(Publishable Key)
     initialize(token) {
         RNHyperTrack.initialize(token);
     },
