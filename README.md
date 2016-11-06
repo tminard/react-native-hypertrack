@@ -1,5 +1,5 @@
 # react-native-hypertrack
-React native module for hypertrack-android and hypertrack-ios SDKs
+React native module for hypertrack-android and hypertrack-ios SDKs. Methods in the Driver SDK are covered in the current release. The [example-react-native](https://github.com/hypertrack/example-react-native) app is built on top of this module.
 
 [![Slack Status](http://slack.hypertrack.io/badge.svg)](http://slack.hypertrack.io) [![npm version](https://badge.fury.io/js/react-native-hypertrack.svg)](https://badge.fury.io/js/react-native-hypertrack)
 
@@ -61,6 +61,24 @@ If you are using an older version of React Native that does not support `link`, 
     ```
 
 ### iOS setup
+The native iOS SDKs need to be setup using Cocoapods. In your project's `ios` directory, create a Podfile.
+```
+$ cd ios
+$ pod init
+```
+
+Edit the Podfile to include `HTTransmitter` as a dependency for your project, and then install the pod.
+```
+$ cat Podfile
+target 'YourApp' do
+  pod 'HTTransmitter'
+  end
+end
+
+$ pod install
+```
+
+Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section.
 ![Linked frameworks and libraries](readme-imgs/linker.png)
 
 ## Usage
