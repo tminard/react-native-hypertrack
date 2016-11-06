@@ -16,6 +16,6 @@ module.exports = {
 
     // Method to end task in driver SDK
     endTrip(tripId, success, failure) {
-        RNHyperTrack.endTrip(taskId, success, failure);
+        RNHyperTrack.endTrip(tripId, success, failure);
     },
 }
