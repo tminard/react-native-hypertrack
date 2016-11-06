@@ -17,16 +17,16 @@ RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
                   :(RCTResponseSenderBlock)failureCallback)
 {
     HTTripParams* tripParams = [[HTTripParams alloc] init];
-    tripParams.driverId = driverId;
-    tripParams.tasksIDs = taskIds;
+    tripParams.driverID = driverId;
+    tripParams.taskIDs = taskIds;
 
-    [[HTTransmitterClient sharedClient] startTripWithTripParams:tripParams completion:^(HTTrip* trip, NSError* error) {
+    [[HTTransmitterClient sharedClient] startTripWithTripParams:tripParams completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
         if (error) {
             // Handle error and try again.
-            failureCallback();
+            failureCallback(@[]);
         } else {
             // If there is no error, use the tripID received in the callback in your app.
-            successCallback();
+            successCallback(@[]);
         }
     }];
 }
@@ -36,14 +36,14 @@ RCT_EXPORT_METHOD(completeTask:(NSString *)taskId
                   :(RCTResponseSenderBlock)failureCallback)
 {
     // Mark task as completed by passing taskID
-    [[HTTransmitterClient sharedClient] completeTaskWithTaskID:taskId completion:^(NSString* taskID, NSError* error) {
+    [[HTTransmitterClient sharedClient] completeTaskWithTaskID:taskId completion:^(HTResponse <HTTask *> * _Nullable response, NSError * _Nullable error) {
 
         if (error) {
             // Handle error and try again.
-            failureCallback();
+            failureCallback(@[]);
         } else {
             // If there is no error, use the taskID received in the callback in your app.
-            successCallback();
+            successCallback(@[]);
         }
     }];
 }
@@ -52,18 +52,16 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
 {
-    // Warning: does not use the tripId
+    // [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
 
-    [[HTTransmitterClient sharedClient] endTripWithCompletion:^(HTTrip* trip, NSError* error) {
-
-        if (error) {
+        // if (error) {
             // Handle error and try again.
-            failureCallback();
-        } else {
+            // failureCallback(@[]);
+        // } else {
             // If there is no error, use the trip received in the callback in your app.
-            successCallback();
-        }
-    }];
+            // successCallback(@[]);
+        // }
+    // }];
 }
 
 @end
