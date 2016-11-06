@@ -65,62 +65,60 @@ If you are using an older version of React Native that does not support `link`, 
 
 ## Usage
 
-1. Import and initialize SDK with your Publishable key before making any other API call
-    ```javascript
-    import RNHyperTrack from 'react-native-hypertrack';
-    ...
+#### Import and initialize SDK with your Publishable key before making any other API call
+ 
+```javascript
+ import RNHyperTrack from 'react-native-hypertrack';
+ ...
 
-    export default class MyApp extends Component {
-      constructor() {
-        super();
-        // Initialize HyperTrack wrapper
-        RNHyperTrack.initialize(PUBLISHABLE_KEY);
-      }
-    }
-   ...
+ export default class MyApp extends Component {
+   constructor() {
+     super();
+     // Initialize HyperTrack wrapper
+     RNHyperTrack.initialize(config.HT_PUBLISHABLE_KEY);
+   }
+ }
+  ...
 ```
+#### Starting a Trip
+```javascript
+ RNHyperTrack.startTrip(
+   DRIVER_ID,
+   [TASK_ID_1, TASK_ID_2...],
+   (successValue) => {
+     // Handle Success
+   },
+   (error) => {
+     // Handle error
+   }
+ );
+```
+#### Completing a task
 
-2. Starting a Trip
-    ```javascript
-    RNHyperTrack.startTrip(
-      DRIVER_ID,
-      [TASK_ID_1, TASK_ID_2...],
-      (successValue) => {
-        // Handle Success
-      },
-      (error) => {
-        // Handle error
-      }
-    );
-    ```
-3. Completing a task
-
-    ```javascript
-    RNHyperTrack.completeTask(
-      TASK_ID,
-      (successValue) => {
-         // Handle Success
-      },
-      (error) => {
-        // Handle error
-      }
-    );
-    ```
+```javascript
+ RNHyperTrack.completeTask(
+   TASK_ID,
+   (successValue) => {
+      // Handle Success
+   },
+   (error) => {
+     // Handle error
+   }
+ );
+```
     
-4. Ending a trip
-
-    ```javascript
-    RNHyperTrack.endTrip(
-      TRIP_ID,
-      (successValue) => {
-        // Handle success
-      },
-      (error) => {
-        // Handle error
-      }      
-    )
-    ```
-
+#### Ending a trip
+```javascript
+ RNHyperTrack.endTrip(
+   TRIP_ID,
+   (successValue) => {
+     // Handle success
+   },
+   (error) => {
+     // Handle error
+   }      
+ );
+```
 ## Documentation
 The HyperTrack documentation is at [docs.hypertrack.io](http://docs.hypertrack.io/).
 
