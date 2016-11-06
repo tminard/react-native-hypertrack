@@ -11,6 +11,12 @@
 
 RCT_EXPORT_MODULE();
 
+RCT_EXPORT_METHOD(initialize:(NSString *)token)
+{
+    NSString * const HyperTrackPublishableKey = token;
+    [HyperTrack setPublishableAPIKey:HyperTrackPublishableKey];
+}
+
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
                   :(NSArray *)taskIds
                   :(RCTResponseSenderBlock)successCallback

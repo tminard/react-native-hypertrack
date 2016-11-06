@@ -4,6 +4,11 @@ import { NativeModules } from 'react-native';
 const { RNHyperTrack } = NativeModules;
 
 module.exports = {
+    // Method to intialize driver SDK with token
+    initialize(token) {
+        RNHyperTrack.initialize(token);
+    },
+
     // Method to start trip in driver SDK
     startTrip(driverId, taskIds, success, failure) {
         RNHyperTrack.startTrip(driverId, taskIds, success, failure);
