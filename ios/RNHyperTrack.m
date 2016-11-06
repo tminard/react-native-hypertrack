@@ -27,7 +27,7 @@ RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
             failureCallback(@[failure]);
         } else {
             // If there is no error, use the tripID received in the callback in your app.
-            NSDictionary *success = @{@"trip" : response.dictionaryValue.jsonString};
+            NSDictionary *success = @{@"trip" : response.result.dictionaryValue.jsonString};
             successCallback(@[success]);
         }
     }];
@@ -46,7 +46,7 @@ RCT_EXPORT_METHOD(completeTask:(NSString *)taskId
             failureCallback(@[failure]);
         } else {
             // If there is no error, use the taskID received in the callback in your app.
-            NSDictionary *success = @{@"task" : response.dictionaryValue.jsonString};
+            NSDictionary *success = @{@"task" : response.result.dictionaryValue.jsonString};
             successCallback(@[success]);
         }
     }];
@@ -64,7 +64,7 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
             failureCallback(@[failure]);
         } else {
             // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"trip" : response.dictionaryValue.jsonString};
+            NSDictionary *success = @{@"trip" : response.result.dictionaryValue.jsonString};
             successCallback(@[success]);
         }
     }];
