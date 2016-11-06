@@ -10,6 +10,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.Arguments;
+
 
 import java.util.Map;
 import java.util.HashMap;
@@ -41,9 +44,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   public RNHyperTrackModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-
-    HyperTrack.setPublishableApiKey("pk_1507af78ef9dca2d250bdd6cf835e315bde4ad96", getReactApplicationContext());
-    HTTransmitterService.initHTTransmitter(getReactApplicationContext());
   }
 
   @Override
@@ -57,6 +57,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
     constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
     return constants;
+  }
+
+  @ReactMethod
+  public void initialize(String publishableKey) {
+    HyperTrack.setPublishableApiKey(publishableKey, getReactApplicationContext());
+    HTTransmitterService.initHTTransmitter(getReactApplicationContext());
   }
 
   @ReactMethod
@@ -89,27 +95,40 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
               try {
                   Gson gson = new Gson();
                   String tripJson = gson.toJson(htTrip);
-                  JSONObject result = new JSONObject();
-                  result.put("is_offline", isOffline);
-                  result.put("trip", tripJson);
-                  successCallback.invoke("");
-              } catch (JSONException e) {
-                  successCallback.invoke("");
+
+                  WritableMap result = Arguments.createMap();
+                  result.putBoolean("is_offline", isOffline);
+                  result.putString("trip", tripJson);
+
+                  Toast.makeText(getReactApplicationContext(), "Start Trip success", 3000).show();
+                  successCallback.invoke(result);
+              } catch (Exception e) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", e.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
+                  failureCallback.invoke(result);
               }
           }
 
           @Override
-          public void onError(Exception e) {
+          public void onError(Exception error) {
               try {
-                  JSONObject result = new JSONObject();
-                  if (e == null) {
-                      result.put("error", "");
+                  WritableMap result = Arguments.createMap();
+                  if (error == null) {
+                      result.putString("error", "");
                   } else {
-                      result.put("error", e.toString());
+                      result.putString("error", error.toString());
                   }
-                  failureCallback.invoke(e.toString());
-              } catch (JSONException exception) {
-                  failureCallback.invoke("");
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
+                  failureCallback.invoke(result);
+              } catch (Exception e) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", e.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to start Trip", 3000).show();
+                  failureCallback.invoke(result);
               }
           }
       });
@@ -126,27 +145,40 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
                try {
                    Gson gson = new Gson();
                    String tripJson = gson.toJson(htTrip);
-                   JSONObject result = new JSONObject();
-                   result.put("is_offline", isOffline);
-                   result.put("trip", tripJson);
-                   successCallback.invoke("");
-               } catch (JSONException e) {
-                   successCallback.invoke("");
+
+                   WritableMap result = Arguments.createMap();
+                   result.putBoolean("is_offline", isOffline);
+                   result.putString("trip", tripJson);
+
+                   Toast.makeText(getReactApplicationContext(), "Trip successfully ended", 3000).show();
+                   successCallback.invoke(result);
+               } catch (Exception e) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", e.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
+                  failureCallback.invoke(result);
                }
            }
 
            @Override
            public void onError(Exception e) {
                try {
-                   JSONObject result = new JSONObject();
+                   WritableMap result = Arguments.createMap();
                    if (e == null) {
-                       result.put("error", "");
+                       result.putString("error", "");
                    } else {
-                       result.put("error", e.toString());
+                       result.putString("error", e.toString());
                    }
-                   failureCallback.invoke("");
-               } catch (JSONException exception) {
-                   failureCallback.invoke("");
+
+                   Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
+                   failureCallback.invoke(result);
+               } catch (Exception exception) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", exception.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to end trip", 3000).show();
+                  failureCallback.invoke(result);
                }
            }
        });
@@ -161,51 +193,52 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
           @Override
           public void onSuccess(String taskID) {
               try {
-                  JSONObject result = new JSONObject();
-                  result.put("task_id", taskID);
-                  successCallback.invoke("Success");
-              } catch (JSONException e) {
-                  successCallback.invoke("");
+                  WritableMap result = Arguments.createMap();
+                  result.putString("task_id", taskID);
+
+                  Toast.makeText(getReactApplicationContext(), "Task successfully completed", 3000).show();
+                  successCallback.invoke(result);
+              } catch (Exception e) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", e.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
+                  successCallback.invoke(result);
               }
           }
 
           @Override
           public void onError(Exception e) {
               try {
-                  JSONObject result = new JSONObject();
+                  WritableMap result = Arguments.createMap();
                   if (e == null) {
-                      result.put("error", "");
+                      result.putString("error", "");
                   } else {
-                      result.put("error", e.toString());
+                      result.putString("error", e.toString());
                   }
-                  failureCallback.invoke(e.toString());
-              } catch (JSONException exception) {
-                  failureCallback.invoke("");
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
+                  failureCallback.invoke(result);
+              } catch (Exception exception) {
+                  WritableMap result = Arguments.createMap();
+                  result.putString("error", exception.toString());
+
+                  Toast.makeText(getReactApplicationContext(), "Failed to complete task", 3000).show();
+                  failureCallback.invoke(result);
               }
           }
       });
   }
 
-  public ArrayList<String> toArrayList(ReadableArray taskIDs) {
+  private ArrayList<String> toArrayList(ReadableArray taskIDs) {
     ArrayList<String> arrayList = new ArrayList<>();
     for (int i = 0; i < taskIDs.size(); i++) {
       switch (taskIDs.getType(i)) {
-        case Null:
-          arrayList.add(null);
-          break;
-        case Boolean:
-          throw new IllegalArgumentException("Could not convert object at index: " + i + ".");
-        case Number:
-          throw new IllegalArgumentException("Could not convert object at index: " + i + ".");
         case String:
           arrayList.add(taskIDs.getString(i));
           break;
-        case Map:
-          throw new IllegalArgumentException("Could not convert object at index: " + i + ".");
-        case Array:
-          throw new IllegalArgumentException("Could not convert object at index: " + i + ".");
         default:
-          throw new IllegalArgumentException("Could not convert object at index: " + i + ".");
+          throw new IllegalArgumentException("Task ID at index " + i + " should be String");
       }
     }
     return arrayList;
