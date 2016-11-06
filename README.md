@@ -74,7 +74,7 @@ If you are using an older version of React Native that does not support `link`, 
       constructor() {
         super();
         // Initialize HyperTrack wrapper
-        RNHyperTrack.initialize(config.HT_PUBLISHABLE_KEY);
+        RNHyperTrack.initialize(PUBLISHABLE_KEY);
       }
     }
    ...
