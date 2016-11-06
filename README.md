@@ -61,24 +61,24 @@ If you are using an older version of React Native that does not support `link`, 
     ```
 
 ### iOS setup
-The native iOS SDKs need to be setup using Cocoapods. In your project's `ios` directory, create a Podfile.
-```
-$ cd ios
-$ pod init
-```
+1. The native iOS SDKs need to be setup using Cocoapods. In your project's `ios` directory, create a Podfile.
+    ```
+    $ cd ios
+    $ pod init
+    ```
 
-Edit the Podfile to include `HTTransmitter` as a dependency for your project, and then install the pod.
-```
-$ cat Podfile
-target 'YourApp' do
-  pod 'HTTransmitter'
-  end
-end
+2. Edit the Podfile to include `HTTransmitter` as a dependency for your project, and then install the pod.
+    ```
+    $ cat Podfile
+    target 'YourApp' do
+      pod 'HTTransmitter'
+      end
+    end
 
-$ pod install
-```
+    $ pod install
+    ```
 
-Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section.
+3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section.
 ![Linked frameworks and libraries](readme-imgs/linker.png)
 
 ## Usage
