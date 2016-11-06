@@ -12,7 +12,7 @@ module.exports = {
 	},
     startTrip(name, location) {
         RNHyperTrack.startTrip(name, location);
-    }
+    },
 	completeTask(taskId, callback) {
 		RNHyperTrack.completeTask(taskId, callback);
 	}
