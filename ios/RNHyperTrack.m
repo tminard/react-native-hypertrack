@@ -1,5 +1,6 @@
 
 #import "RNHyperTrack.h"
+#import "RCTLog.h"
 #import <HTTransmitter/HTTransmitter.h>
 
 @implementation RNHyperTrack
