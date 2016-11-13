@@ -1,7 +1,7 @@
 
 ## Common issues in Android
 ### Undefined methods
-![Undefined error](readme-imgs/undefined.png)
+![Undefined error](readme-imgs/undefined-error.png)
 
 1. Include this module in your `android/settings.gradle`:
 
