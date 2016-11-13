@@ -72,7 +72,6 @@ If you are using an older version of React Native that does not support `link`, 
     $ cat Podfile
     target 'YourApp' do
       pod 'HTTransmitter'
-      end
     end
 
     $ pod install
