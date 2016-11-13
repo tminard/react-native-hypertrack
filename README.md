@@ -77,7 +77,7 @@ If you are using an older version of React Native that does not support `link`, 
     $ pod install
     ```
 
-3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section.
+3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section. You need to add *libHTTransmitter.a*, *libHTCommon.a*, *libMQTTClient.a*.
 ![Linked frameworks and libraries](readme-imgs/linker.png)
 
 ## Usage
