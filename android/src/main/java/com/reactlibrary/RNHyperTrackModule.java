@@ -220,6 +220,13 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
       });
   }
 
+  @ReactMethod
+  public boolean isActive() {
+      Context context = getReactApplicationContext();
+      HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+      return transmitterService.isDriverLive();
+  }
+
   private ArrayList<String> toArrayList(ReadableArray taskIDs) {
     ArrayList<String> arrayList = new ArrayList<>();
     for (int i = 0; i < taskIDs.size(); i++) {

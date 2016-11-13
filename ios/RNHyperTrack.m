@@ -69,7 +69,7 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
                   :(RCTResponseSenderBlock)failureCallback)
 {
     [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
-        
+
         if (error) {
             // Handle error and try again.
             NSDictionary *failure = @{@"error" : error.localizedDescription};
@@ -80,6 +80,10 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
             successCallback(@[success]);
         }
     }];
+}
+
+RCT_EXPORT_METHOD(isActive) {
+    return [[HTTransmitterClient sharedClient] transmitingLocation];
 }
 
 @end
