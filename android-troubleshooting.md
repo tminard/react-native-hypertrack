@@ -1,6 +1,8 @@
 
-#### Common issues
-##### SDK undefined
+## Common issues in Android
+### Undefined methods
+![Undefined error](readme-imgs/undefined.png)
+
 1. Include this module in your `android/settings.gradle`:
 
     ```
@@ -36,13 +38,13 @@
     }
     ```
 
-##### Play services
+### Play services
 ```
 { error: 'java.lang.IllegalStateException: Cannot start trip. Please update play services' }
 ```
 
 
-##### Location
+### Location
 ```
 { error: 'java.lang.IllegalArgumentException: Please verify Location Settings. Have you enabled Location and set Location Mode to High Accuracy ?' }
 ```
