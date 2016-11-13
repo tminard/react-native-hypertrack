@@ -13,7 +13,7 @@ $ react-native link react-native-hypertrack
 If you are using an older version of React Native that does not support `link`, you can [manually link](https://facebook.github.io/react-native/docs/linking-libraries-ios.html) libraries.
 
 ### Android setup
-1. To use the HyperTrack Android SDKs, the following urls need to be added to your `android/build.gradle` file. This will configure the repository urls for the SDKs.
+To use the HyperTrack Android SDKs, the following urls need to be added to your `android/build.gradle` file. This will configure the repository urls for the SDKs.
 
         ```
         allprojects {
@@ -25,7 +25,9 @@ If you are using an older version of React Native that does not support `link`, 
         }
         ```
 
-2. Include this module in your `android/settings.gradle`:
+#### Common issues
+##### SDK undefined
+1. Include this module in your `android/settings.gradle`:
 
     ```
     include ':react-native-hypertrack'
@@ -33,7 +35,7 @@ If you are using an older version of React Native that does not support `link`, 
     include ':app'
     ```
 
-3. Add a dependency to your app build in `android/app/build.gradle`:
+2. Add a dependency to your app build in `android/app/build.gradle`:
 
     ```
     dependencies {
@@ -42,7 +44,7 @@ If you are using an older version of React Native that does not support `link`, 
     }
     ```
 
-4. Change your main application to add a new package, in `android/app/src/main/.../MainApplication.java`:
+3. Change your main application to add a new package, in `android/app/src/main/.../MainApplication.java`:
 
     ```java
     import com.reactlibrary.RNHyperTrackPackage; // Add new import
@@ -60,6 +62,17 @@ If you are using an older version of React Native that does not support `link`, 
     }
     ```
 
+##### Play services
+```
+{ error: 'java.lang.IllegalStateException: Cannot start trip. Please update play services' }
+```
+
+
+##### Location
+```
+{ error: 'java.lang.IllegalArgumentException: Please verify Location Settings. Have you enabled Location and set Location Mode to High Accuracy ?' }
+```
+
 ### iOS setup
 1. The native iOS SDKs need to be setup using Cocoapods. In your project's `ios` directory, create a Podfile.
     ```
@@ -72,13 +85,12 @@ If you are using an older version of React Native that does not support `link`, 
     $ cat Podfile
     target 'YourApp' do
       pod 'HTTransmitter'
-      end
     end
 
     $ pod install
     ```
 
-3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section.
+3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section. You need to add *libHTTransmitter.a*, *libHTCommon.a*, *libMQTTClient.a*.
 ![Linked frameworks and libraries](readme-imgs/linker.png)
 
 ## Usage

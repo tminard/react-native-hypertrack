@@ -9,6 +9,11 @@ module.exports = {
         RNHyperTrack.initialize(token);
     },
 
+    // connect SDK to the backend for a driver id
+    connectDriver(driverId) {
+        RNHyperTrack.connectDriver(driverId);
+    },
+
     // Method to start trip in driver SDK
     startTrip(driverId, taskIds, success, failure) {
         RNHyperTrack.startTrip(driverId, taskIds, success, failure);
