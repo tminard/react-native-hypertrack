@@ -38,13 +38,16 @@
     }
     ```
 
-### Play services
+### Play services not found
 ```
 { error: 'java.lang.IllegalStateException: Cannot start trip. Please update play services' }
 ```
 
+To fix this, open the Android SDK Manager to ensure that Google APIs are installed for the local Android SDK installation.
 
-### Location
+### Location not working
 ```
 { error: 'java.lang.IllegalArgumentException: Please verify Location Settings. Have you enabled Location and set Location Mode to High Accuracy ?' }
 ```
+
+To fix this, open location settings on your Android phone, and ensure that it is enabled and set at high accuracy.
