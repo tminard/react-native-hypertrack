@@ -76,7 +76,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public String activeDriver() {
+  public String getActiveDriver() {
       Context context = getReactApplicationContext();
       HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
       return transmitterService.getActiveDriverID();

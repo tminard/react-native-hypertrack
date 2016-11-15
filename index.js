@@ -14,14 +14,14 @@ module.exports = {
         RNHyperTrack.connectDriver(driverId);
     },
 
-    // return active driver id
+    // get active driver id
     getActiveDriver(callback) {
-        return RNHyperTrack.getActiveDriver(callback);
+        RNHyperTrack.getActiveDriver(callback);
     },
 
-    // check if transmitting locations
+    // get transmitting locations status
     isTransmitting(callback) {
-        return RNHyperTrack.isTransmitting(callback);
+        RNHyperTrack.isTransmitting(callback);
     },
 
     // Method to start trip in driver SDK
