@@ -22,14 +22,14 @@ RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
     [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
 }
 
-RCT_EXPORT_METHOD(getActiveDriver)
+RCT_EXPORT_METHOD(getActiveDriver:(RCTResponseSenderBlock)callback)
 {
-    return [[HTTransmitterClient sharedClient] activeDriverID];
+    callback(@[[[HTTransmitterClient sharedClient] activeDriverID]]);
 }
 
-RCT_EXPORT_METHOD(isTransmitting)
+RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
 {
-    return [[HTTransmitterClient sharedClient] transmitingLocation];
+    callback(@[[[HTTransmitterClient sharedClient] transmitingLocation]]);
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
