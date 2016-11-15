@@ -91,8 +91,4 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
     }];
 }
 
-RCT_EXPORT_METHOD(isActive) {
-    return [[HTTransmitterClient sharedClient] transmitingLocation];
-}
-
 @end
