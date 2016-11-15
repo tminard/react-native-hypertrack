@@ -9,6 +9,11 @@ module.exports = {
         RNHyperTrack.initialize(token);
     },
 
+    // get active publishable key
+    getPublishableKey(callback) {
+        RNHyperTrack.getPublishableKey(callback);
+    },
+
     // connect SDK to the backend for a driver id
     connectDriver(driverId) {
         RNHyperTrack.connectDriver(driverId);

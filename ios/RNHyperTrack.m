@@ -17,6 +17,11 @@ RCT_EXPORT_METHOD(initialize:(NSString *)token)
     [HyperTrack setPublishableAPIKey:HyperTrackPublishableKey];
 }
 
+RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
+{
+    callback(@[[HyperTrack publishableKey]]);
+}
+
 RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
 {
     [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
