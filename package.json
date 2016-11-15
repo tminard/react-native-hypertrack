@@ -1,13 +1,13 @@
 {
   "name": "react-native-hypertrack",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "React native module for hypertrack SDKs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native"
+    "react-native", "hypertrack", "location"
   ],
   "author": "HyperTrack <support@hypertrack.io> (https://www.hypertrack.io/)",
   "repository": {

@@ -19,8 +19,17 @@ RCT_EXPORT_METHOD(initialize:(NSString *)token)
 
 RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
 {
-    // error completion block should not be nil?
     [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
+}
+
+RCT_EXPORT_METHOD(getActiveDriver:(RCTResponseSenderBlock)callback)
+{
+    callback(@[[[HTTransmitterClient sharedClient] activeDriverID]]);
+}
+
+RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
+{
+    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmitingLocation]]]);
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
@@ -69,7 +78,7 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
                   :(RCTResponseSenderBlock)failureCallback)
 {
     [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
-        
+
         if (error) {
             // Handle error and try again.
             NSDictionary *failure = @{@"error" : error.localizedDescription};

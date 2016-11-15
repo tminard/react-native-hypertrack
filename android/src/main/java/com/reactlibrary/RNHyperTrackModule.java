@@ -42,37 +42,51 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
   private static final String DURATION_LONG_KEY = "LONG";
 
   public RNHyperTrackModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
+      super(reactContext);
+      this.reactContext = reactContext;
   }
 
   @Override
   public String getName() {
-    return "RNHyperTrack";
+      return "RNHyperTrack";
   }
 
   @Override
   public Map<String, Object> getConstants() {
-    final Map<String, Object> constants = new HashMap<>();
-    constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
-    constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
-    return constants;
+      final Map<String, Object> constants = new HashMap<>();
+      constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
+      constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
+      return constants;
   }
 
   @ReactMethod
   public void initialize(String publishableKey) {
-    HyperTrack.setPublishableApiKey(publishableKey, getReactApplicationContext());
-    HTTransmitterService.initHTTransmitter(getReactApplicationContext());
+      HyperTrack.setPublishableApiKey(publishableKey, getReactApplicationContext());
+      HTTransmitterService.initHTTransmitter(getReactApplicationContext());
   }
 
   @ReactMethod
   public void show(String message, int duration) {
-    Toast.makeText(getReactApplicationContext(), message, duration).show();
+      Toast.makeText(getReactApplicationContext(), message, duration).show();
   }
 
   @ReactMethod
   public void connectDriver(String driverID) {
-    HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+      HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+  }
+
+  @ReactMethod
+  public void getActiveDriver(final Callback callback) {
+      Context context = getReactApplicationContext();
+      HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+      callback.invoke(transmitterService.getDriverID());
+  }
+
+  @ReactMethod
+  public void isTransmitting(final Callback callback) {
+      Context context = getReactApplicationContext();
+      HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+      callback.invoke(transmitterService.isDriverLive());
   }
 
   @ReactMethod
