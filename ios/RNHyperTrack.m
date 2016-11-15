@@ -19,8 +19,17 @@ RCT_EXPORT_METHOD(initialize:(NSString *)token)
 
 RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
 {
-    // error completion block should not be nil?
     [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
+}
+
+RCT_EXPORT_METHOD(getActiveDriver)
+{
+    return [[HTTransmitterClient sharedClient] activeDriverID];
+}
+
+RCT_EXPORT_METHOD(isTransmitting)
+{
+    return [[HTTransmitterClient sharedClient] transmitingLocation];
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId

@@ -14,6 +14,16 @@ module.exports = {
         RNHyperTrack.connectDriver(driverId);
     },
 
+    // return active driver id
+    getActiveDriver() {
+        return RNHyperTrack.getActiveDriver();
+    }
+
+    // check if transmitting locations
+    isTransmitting() {
+        return RNHyperTrack.isTransmitting();
+    }
+
     // Method to start trip in driver SDK
     startTrip(driverId, taskIds, success, failure) {
         RNHyperTrack.startTrip(driverId, taskIds, success, failure);
