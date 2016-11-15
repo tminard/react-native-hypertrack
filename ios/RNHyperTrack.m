@@ -19,7 +19,13 @@ RCT_EXPORT_METHOD(initialize:(NSString *)token)
 
 RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[HyperTrack publishableKey]]);
+    NSString *publishableKey = [HyperTrack publishableKey];
+
+    if (publishableKey) {
+        callback(@[publishableKey]);
+    } else {
+        callback(@[@""]);
+    }
 }
 
 RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
@@ -29,7 +35,13 @@ RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
 
 RCT_EXPORT_METHOD(getActiveDriver:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[[HTTransmitterClient sharedClient] activeDriverID]]);
+    NSString *driverID = [[HTTransmitterClient sharedClient] activeDriverID];
+
+    if (driverID) {
+        callback(@[driverID]);
+    } else {
+        callback(@[@""]);
+    }
 }
 
 RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
