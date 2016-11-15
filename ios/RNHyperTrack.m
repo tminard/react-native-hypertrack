@@ -29,7 +29,7 @@ RCT_EXPORT_METHOD(getActiveDriver:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
 {
-    callback(@[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmitingLocation]]);
+    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmitingLocation]]]);
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
