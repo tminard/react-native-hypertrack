@@ -43,9 +43,4 @@ module.exports = {
     endTrip(tripId, success, failure) {
         RNHyperTrack.endTrip(tripId, success, failure);
     },
-
-    // Method to detect if location is active
-    isActive() {
-        return RNHyperTrack.isActive();
-    },
 }
