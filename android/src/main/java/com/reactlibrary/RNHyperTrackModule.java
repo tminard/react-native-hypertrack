@@ -82,7 +82,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getActiveDriver(final Callback callback) {
+    public void getConnectedDriver(final Callback callback) {
         Context context = getReactApplicationContext();
         HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
         callback.invoke(transmitterService.getDriverID());

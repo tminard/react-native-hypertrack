@@ -19,9 +19,9 @@ module.exports = {
         RNHyperTrack.connectDriver(driverId);
     },
 
-    // get active driver id
-    getActiveDriver(callback) {
-        RNHyperTrack.getActiveDriver(callback);
+    // get connected driver id
+    getConnectedDriver(callback) {
+        RNHyperTrack.getConnectedDriver(callback);
     },
 
     // get transmitting locations status
