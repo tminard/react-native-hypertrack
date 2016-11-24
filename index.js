@@ -19,9 +19,9 @@ module.exports = {
         RNHyperTrack.connectDriver(driverId);
     },
 
-    // get active driver id
-    getActiveDriver(callback) {
-        RNHyperTrack.getActiveDriver(callback);
+    // get connected driver id
+    getConnectedDriver(callback) {
+        RNHyperTrack.getConnectedDriver(callback);
     },
 
     // get transmitting locations status
@@ -42,10 +42,5 @@ module.exports = {
     // Method to end task in driver SDK
     endTrip(tripId, success, failure) {
         RNHyperTrack.endTrip(tripId, success, failure);
-    },
-
-    // Method to detect if location is active
-    isActive() {
-        return RNHyperTrack.isActive();
     },
 }

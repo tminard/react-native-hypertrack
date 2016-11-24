@@ -33,7 +33,7 @@ RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
     [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
 }
 
-RCT_EXPORT_METHOD(getActiveDriver:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(getConnectedDriver:(RCTResponseSenderBlock)callback)
 {
     NSString *driverID = [[HTTransmitterClient sharedClient] activeDriverID];
 
