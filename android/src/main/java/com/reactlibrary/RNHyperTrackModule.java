@@ -2,6 +2,9 @@
 package com.reactlibrary;
 
 import android.widget.Toast;
+import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.location.Location;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -12,22 +15,21 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
-
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-
 
 import io.hypertrack.lib.common.HyperTrack;
 import io.hypertrack.lib.transmitter.service.HTTransmitterService;
 import io.hypertrack.lib.transmitter.model.HTTrip;
 import io.hypertrack.lib.transmitter.model.HTTripParams;
 import io.hypertrack.lib.transmitter.model.HTTripParamsBuilder;
+import io.hypertrack.lib.transmitter.model.TransmitterConstants;
 import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
 
-import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,9 +43,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
 
+    privat final StatusBroadcastReceiver mStatusBroadcastReceiver;
+
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+        this.mStatusBroadcastReceiver = new StatusBroadcastReceiver();
     }
 
     @Override
@@ -152,50 +157,50 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void endTrip(String tripID, final Callback successCallback, final Callback failureCallback) {
-         Context context = getReactApplicationContext();
-         HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+        Context context = getReactApplicationContext();
+        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
 
-         transmitterService.endTrip(tripID, new HTTripStatusCallback() {
-             @Override
-             public void onSuccess(boolean isOffline, HTTrip htTrip) {
-                 try {
-                     Gson gson = new Gson();
-                     String tripJson = gson.toJson(htTrip);
+        transmitterService.endTrip(tripID, new HTTripStatusCallback() {
+            @Override
+            public void onSuccess(boolean isOffline, HTTrip htTrip) {
+                try {
+                    Gson gson = new Gson();
+                    String tripJson = gson.toJson(htTrip);
 
-                     WritableMap result = Arguments.createMap();
-                     result.putBoolean("is_offline", isOffline);
-                     result.putString("trip", tripJson);
+                    WritableMap result = Arguments.createMap();
+                    result.putBoolean("is_offline", isOffline);
+                    result.putString("trip", tripJson);
 
 
-                     successCallback.invoke(result);
-                 } catch (Exception e) {
+                    successCallback.invoke(result);
+                } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
                     result.putString("error", e.toString());
 
                     failureCallback.invoke(result);
-                 }
-             }
+                }
+            }
 
-             @Override
-             public void onError(Exception e) {
-                 try {
-                     WritableMap result = Arguments.createMap();
-                     if (e == null) {
-                         result.putString("error", "");
-                     } else {
-                         result.putString("error", e.toString());
-                     }
+            @Override
+            public void onError(Exception e) {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    if (e == null) {
+                        result.putString("error", "");
+                    } else {
+                        result.putString("error", e.toString());
+                    }
 
 
-                     failureCallback.invoke(result);
-                 } catch (Exception exception) {
+                    failureCallback.invoke(result);
+                } catch (Exception exception) {
                     WritableMap result = Arguments.createMap();
                     result.putString("error", exception.toString());
 
                     failureCallback.invoke(result);
-                 }
-             }
-         });
+                }
+            }
+        });
     }
 
     @ReactMethod
@@ -241,16 +246,43 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     }
 
     private ArrayList<String> toArrayList(ReadableArray taskIDs) {
-      ArrayList<String> arrayList = new ArrayList<>();
-      for (int i = 0; i < taskIDs.size(); i++) {
-        switch (taskIDs.getType(i)) {
-          case String:
-            arrayList.add(taskIDs.getString(i));
-            break;
-          default:
-            throw new IllegalArgumentException("Task ID at index " + i + " should be String");
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < taskIDs.size(); i++) {
+            switch (taskIDs.getType(i)) {
+                case String:
+                    arrayList.add(taskIDs.getString(i));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Task ID at index " + i + " should be String");
+            }
         }
-      }
-      return arrayList;
+        return arrayList;
+    }
+
+    private void sendCurrentLocation(Location location) {
+        WritableMap params = Arguments.createMap();
+        params.putDouble("latitude", location.getLatitude());
+        params.putDouble("longitude", location.getLongitude());
+        sendEvent("currentLocationDidChange", params);
+    }
+
+    private void sendEvent(String eventName, @Nullable WritableMap params) {
+        getReactApplicationContext()
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
+    private class StatusBroadcastReceiver extends BroadcastReceiver {
+        //
+        private StatusBroadcastReceiver() { }
+
+        public void onReceive(Context paramContext, Intent paramIntent) {
+            if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY)) {
+                Bundle bundle = paramIntent.getExtras();
+                Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
+
+                RNHyperTrackModule.this.sendCurrentLocation(location);
+            }
+        }
     }
 }

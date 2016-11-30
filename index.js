@@ -43,4 +43,8 @@ module.exports = {
     endTrip(tripId, success, failure) {
         RNHyperTrack.endTrip(tripId, success, failure);
     },
+
+    // Method to start shift in driver SDK
+
+    // Method to end shift in driver SDK
 }
