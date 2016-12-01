@@ -43,7 +43,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
 
-    privat final StatusBroadcastReceiver mStatusBroadcastReceiver;
+    private final StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -273,7 +273,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     }
 
     private class StatusBroadcastReceiver extends BroadcastReceiver {
-        //
         private StatusBroadcastReceiver() { }
 
         public void onReceive(Context paramContext, Intent paramIntent) {
