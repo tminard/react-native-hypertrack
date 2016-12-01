@@ -4,9 +4,11 @@ package com.reactlibrary;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -18,6 +20,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.LifecycleEventListener;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -38,19 +41,20 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
-public class RNHyperTrackModule extends ReactContextBaseJavaModule {
+public class RNHyperTrackModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private final ReactApplicationContext reactContext;
-
-    private static final String DURATION_SHORT_KEY = "SHORT";
-    private static final String DURATION_LONG_KEY = "LONG";
-
     private final StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
         this.mStatusBroadcastReceiver = new StatusBroadcastReceiver();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT);
+        filter.addAction(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT);
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(mStatusBroadcastReceiver, filter);
     }
 
     @Override
@@ -61,8 +65,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
-        constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
-        constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
         return constants;
     }
 
@@ -247,6 +249,17 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
         });
     }
 
+    @Override
+    public void onHostDestroy() {
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).unregisterReceiver(mStatusBroadcastReceiver);
+    }
+
+    @Override
+    public void onHostPause() { }
+
+    @Override
+    public void onHostResume() { }
+
     private ArrayList<String> toArrayList(ReadableArray taskIDs) {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < taskIDs.size(); i++) {
@@ -278,11 +291,15 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
         private StatusBroadcastReceiver() { }
 
         public void onReceive(Context paramContext, Intent paramIntent) {
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY)) {
+            if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
                 Bundle bundle = paramIntent.getExtras();
                 Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
 
                 RNHyperTrackModule.this.sendCurrentLocation(location);
+            }
+
+            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
+                // handle intent
             }
         }
     }
