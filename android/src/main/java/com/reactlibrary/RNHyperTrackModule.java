@@ -54,6 +54,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         IntentFilter filter = new IntentFilter();
         filter.addAction(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT);
         filter.addAction(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT);
+        filter.addAction(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT);
         LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(mStatusBroadcastReceiver, filter);
     }
 
@@ -281,6 +282,16 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         sendEvent("currentLocationDidChange", params);
     }
 
+    private void sendActiveIntent() {
+        WritableMap params = Arguments.createMap();
+        sendEvent("driverIsActive", params);
+    }
+
+    private void sendInactiveIntent() {
+        WritableMap params = Arguments.createMap();
+        sendEvent("driverIsInactive", params);
+    }
+
     private void sendEvent(String eventName, WritableMap params) {
         getReactApplicationContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -294,12 +305,15 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
             if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
                 Bundle bundle = paramIntent.getExtras();
                 Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
-
                 RNHyperTrackModule.this.sendCurrentLocation(location);
             }
 
             if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
-                // handle intent
+                RNHyperTrackModule.this.sendActiveIntent();
+            }
+
+            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT)) {
+                RNHyperTrackModule.this.sendInactiveIntent();
             }
         }
     }
