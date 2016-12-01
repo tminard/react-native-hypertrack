@@ -3,8 +3,10 @@ package com.reactlibrary;
 
 import android.widget.Toast;
 import android.content.Context;
+import android.content.Intent;
 import android.content.BroadcastReceiver;
 import android.location.Location;
+import android.os.Bundle;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -15,7 +17,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -43,7 +45,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
 
-    privat final StatusBroadcastReceiver mStatusBroadcastReceiver;
+    private final StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -266,14 +268,13 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule {
         sendEvent("currentLocationDidChange", params);
     }
 
-    private void sendEvent(String eventName, @Nullable WritableMap params) {
+    private void sendEvent(String eventName, WritableMap params) {
         getReactApplicationContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
     }
 
     private class StatusBroadcastReceiver extends BroadcastReceiver {
-        //
         private StatusBroadcastReceiver() { }
 
         public void onReceive(Context paramContext, Intent paramIntent) {
