@@ -236,7 +236,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onError(Exception error) {
                 try {
                     WritableMap result = Arguments.createMap();
                     if (error == null) {
@@ -268,7 +268,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     Gson gson = new Gson();
                     String shiftJson = gson.toJson(htShift);
                     WritableMap result = Arguments.createMap();
-                    result.put("shift", shiftJson);
+                    result.putString("shift", shiftJson);
                     successCallback.invoke(result);
                 } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
