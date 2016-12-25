@@ -31,7 +31,11 @@ import io.hypertrack.lib.transmitter.service.HTTransmitterService;
 import io.hypertrack.lib.transmitter.model.HTTrip;
 import io.hypertrack.lib.transmitter.model.HTTripParams;
 import io.hypertrack.lib.transmitter.model.HTTripParamsBuilder;
+import io.hypertrack.lib.transmitter.model.HTShift;
+import io.hypertrack.lib.transmitter.model.HTShiftParams;
+import io.hypertrack.lib.transmitter.model.HTShiftParamsBuilder;
 import io.hypertrack.lib.transmitter.model.TransmitterConstants;
+import io.hypertrack.lib.transmitter.model.callback.HTShiftStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
 
@@ -175,8 +179,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     WritableMap result = Arguments.createMap();
                     result.putBoolean("is_offline", isOffline);
                     result.putString("trip", tripJson);
-
-
                     successCallback.invoke(result);
                 } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
@@ -195,8 +197,95 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     } else {
                         result.putString("error", e.toString());
                     }
+                    failureCallback.invoke(result);
+                } catch (Exception exception) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", exception.toString());
 
+                    failureCallback.invoke(result);
+                }
+            }
+        });
+    }
 
+    @ReactMethod
+    public void startShift(String driverID, final Callback successCallback, final Callback failureCallback) {
+        Context context = getReactApplicationContext();
+        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+
+        HTShiftParamsBuilder htShiftParamsBuilder = new HTShiftParamsBuilder();
+        HTShiftParams htShiftParams = htShiftParamsBuilder.setDriverID(driverID).createHTShiftParams();
+
+        transmitterService.startShift(htShiftParams, new HTShiftStatusCallback() {
+            @Override
+            public void onSuccess(HTShift htShift) {
+                try {
+                    Gson gson = new Gson();
+                    String shiftJson = gson.toJson(htShift);
+
+                    WritableMap result = Arguments.createMap();
+                    result.putString("trip", shiftJson);
+
+                    successCallback.invoke(result);
+                } catch (JSONException e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception error) {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    if (error == null) {
+                        result.putString("error", "");
+                    } else {
+                        result.putString("error", error.toString());
+                    }
+
+                    failureCallback.invoke(result);
+                } catch (JSONException exception) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", error.toString());
+
+                    failureCallback.invoke(result);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void endShift(final Callback successCallback, final Callback failureCallback) {
+        Context context = getReactApplicationContext();
+        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+
+        transmitterService.endShift(new HTShiftStatusCallback() {
+            @Override
+            public void onSuccess(HTShift htShift) {
+                try {
+                    Gson gson = new Gson();
+                    String shiftJson = gson.toJson(htShift);
+                    WritableMap result = Arguments.createMap();
+                    result.putString("shift", shiftJson);
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    if (e == null) {
+                        result.putString("error", "");
+                    } else {
+                        result.putString("error", e.toString());
+                    }
                     failureCallback.invoke(result);
                 } catch (Exception exception) {
                     WritableMap result = Arguments.createMap();

@@ -108,4 +108,40 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
     }];
 }
 
+RCT_EXPORT_METHOD(startShift:(NSString *)driverId
+                  :(RCTResponseSenderBlock)successCallback
+                  :(RCTResponseSenderBlock)failureCallback)
+{
+    HTShiftParams *shiftParams = [[HTShiftParams alloc] init];
+    shiftParams.driverID = driverId;
+
+    [[HTTransmitterClient sharedClient] startShiftWithShiftParams:shiftParams completion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            // Handle error and try again.
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
+        } else {
+            // If there is no error, use the trip received in the callback in your app.
+            NSDictionary *success = @{@"shift" : ""};
+            successCallback(@[success]);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(endShift:(RCTResponseSenderBlock)successCallback
+                  :(RCTResponseSenderBlock)failureCallback)
+{
+    [[HTTransmitterClient sharedClient] endShiftWithCompletion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            // Handle error and try again.
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
+        } else {
+            // If there is no error, use the trip received in the callback in your app.
+            NSDictionary *success = @{@"shift" : ""};
+            successCallback(@[success]);
+        }
+    }];
+}
+
 @end

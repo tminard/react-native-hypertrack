@@ -45,6 +45,12 @@ module.exports = {
     },
 
     // Method to start shift in driver SDK
+    startShift(driverId, success, failure) {
+        RNHyperTrack.startShift(driverId, success, failure);
+    },
 
     // Method to end shift in driver SDK
+    endShift(success, failure) {
+        RNHyperTrack.endShift(success, failure);
+    }
 }
