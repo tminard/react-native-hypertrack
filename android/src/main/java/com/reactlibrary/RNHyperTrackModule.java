@@ -248,7 +248,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     failureCallback.invoke(result);
                 } catch (JSONException exception) {
                     WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
+                    result.putString("error", error.toString());
 
                     failureCallback.invoke(result);
                 }
