@@ -227,7 +227,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     result.putString("trip", shiftJson);
 
                     successCallback.invoke(result);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
                     result.putString("error", e.toString());
 
@@ -246,9 +246,9 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     }
 
                     failureCallback.invoke(result);
-                } catch (JSONException exception) {
+                } catch (Exception exception) {
                     WritableMap result = Arguments.createMap();
-                    result.putString("error", error.toString());
+                    result.putString("error", exception.toString());
 
                     failureCallback.invoke(result);
                 }
