@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package io.hypertrack;
 
 import android.widget.Toast;
 import android.content.Context;

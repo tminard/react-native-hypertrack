@@ -23,7 +23,7 @@
 3. Change your main application to add a new package, in `android/app/src/main/.../MainApplication.java`:
 
     ```java
-    import com.reactlibrary.RNHyperTrackPackage; // Add new import
+    import io.hypertrack.RNHyperTrackPackage; // Add new import
 
     public class MainApplication extends Application implements ReactApplication {
       ...
