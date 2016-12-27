@@ -122,7 +122,7 @@ RCT_EXPORT_METHOD(startShift:(NSString *)driverId
             failureCallback(@[failure]);
         } else {
             // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"shift" : ""};
+            NSDictionary *success = @{@"shift" : @""};
             successCallback(@[success]);
         }
     }];
@@ -138,7 +138,7 @@ RCT_EXPORT_METHOD(endShift:(RCTResponseSenderBlock)successCallback
             failureCallback(@[failure]);
         } else {
             // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"shift" : ""};
+            NSDictionary *success = @{@"shift" : @""};
             successCallback(@[success]);
         }
     }];

@@ -1,5 +1,14 @@
 
 ## Common issues in Android
+### Package does not exist
+
+```
+.../MainApplication.java:11: error: package com.reactlibrary does not exist
+import com.reactlibrary.RNHyperTrackPackage;
+```
+
+This can happen while upgrading to 0.3.x from 0.2.x as the package name for the wrapper was changed. To fix, update the package to `io.hypertrack.RNHyperTrackPackage`.
+
 ### Undefined methods
 ![Undefined error](readme-imgs/undefined-error.png)
 
@@ -23,7 +32,7 @@
 3. Change your main application to add a new package, in `android/app/src/main/.../MainApplication.java`:
 
     ```java
-    import com.reactlibrary.RNHyperTrackPackage; // Add new import
+    import io.hypertrack.RNHyperTrackPackage; // Add new import
 
     public class MainApplication extends Application implements ReactApplication {
       ...
