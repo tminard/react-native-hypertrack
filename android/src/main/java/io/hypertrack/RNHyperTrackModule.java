@@ -37,6 +37,7 @@ import io.hypertrack.lib.transmitter.model.HTShiftParamsBuilder;
 import io.hypertrack.lib.transmitter.model.TransmitterConstants;
 import io.hypertrack.lib.transmitter.model.callback.HTShiftStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
+import io.hypertrack.lib.transmitter.model.callback.HTEndAllTripsCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
 
 import org.json.JSONArray;
@@ -202,6 +203,45 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     WritableMap result = Arguments.createMap();
                     result.putString("error", exception.toString());
 
+                    failureCallback.invoke(result);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void endAllTrips(String driverID, final Callback successCallback, final Callback failureCallback) {
+        Context context = getReactApplicationContext();
+        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+
+        transmitterService.endAllTrips(driverID, new HTEndAllTripsCallback() {
+            @Override
+            public void onSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    String tripJson = gson.toJson(htTrip);
+                    WritableMap result = Arguments.createMap();
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    if (e == null) {
+                        result.putString("error", "");
+                    } else {
+                        result.putString("error", e.toString());
+                    }
+                    failureCallback.invoke(result);
+                } catch (Exception exception) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", exception.toString());
                     failureCallback.invoke(result);
                 }
             }

@@ -39,9 +39,14 @@ module.exports = {
         RNHyperTrack.completeTask(taskId, success, failure);
     },
 
-    // Method to end task in driver SDK
+    // Method to end trip in driver SDK
     endTrip(tripId, success, failure) {
         RNHyperTrack.endTrip(tripId, success, failure);
+    },
+
+    // Method to end all trips for driver in driver SDK
+    endAllTrips(driverId, success, failure) {
+        RNHyperTrack.endAllTrips(driverId, success, failure);
     },
 
     // Method to start shift in driver SDK
