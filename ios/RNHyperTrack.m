@@ -112,7 +112,7 @@ RCT_EXPORT_METHOD(endAllTrips:(NSString *)driverId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
 {
-    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:driverId completion:^(NSError * _Nullable error) {
+    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(NSError * _Nullable error) {
 
         if (error) {
             // Handle error and try again.
