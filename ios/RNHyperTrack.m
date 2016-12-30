@@ -108,6 +108,24 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
     }];
 }
 
+RCT_EXPORT_METHOD(endAllTrips:(NSString *)driverId
+                  :(RCTResponseSenderBlock)successCallback
+                  :(RCTResponseSenderBlock)failureCallback)
+{
+    [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(NSError * _Nullable error) {
+
+        if (error) {
+            // Handle error and try again.
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
+        } else {
+            // If there is no error, use the trip received in the callback in your app.
+            NSDictionary *success = @{};
+            successCallback(@[success]);
+        }
+    }];
+}
+
 RCT_EXPORT_METHOD(startShift:(NSString *)driverId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
