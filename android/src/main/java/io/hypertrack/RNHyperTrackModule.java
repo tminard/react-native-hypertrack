@@ -218,8 +218,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
             @Override
             public void onSuccess() {
                 try {
-                    Gson gson = new Gson();
-                    String tripJson = gson.toJson(htTrip);
                     WritableMap result = Arguments.createMap();
                     successCallback.invoke(result);
                 } catch (Exception e) {
