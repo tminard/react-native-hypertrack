@@ -1,6 +1,7 @@
 
 #import "RNHyperTrack.h"
 #import <HTTransmitter/HTTransmitter.h>
+#import "RCTBridge.h"
 
 @implementation RNHyperTrack
 
@@ -8,6 +9,8 @@
 {
     return dispatch_get_main_queue();
 }
+
+RCT_EXPORT_MODULE();
 
 - (id)init
 {
@@ -24,8 +27,6 @@
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
