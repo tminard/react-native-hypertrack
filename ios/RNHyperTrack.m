@@ -12,22 +12,6 @@
 
 RCT_EXPORT_MODULE();
 
-- (id)init
-{
-    NSLog(@"init for wrapper called");
-
-    [[NSNotificationCenter defaultCenter] addObserverForName:HTLocationServiceDidTerminate object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        NSLog(@"notification received for location service terminate : %@", note);
-        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
-    }];
-}
-
-- (void)dealloc {
-    NSLog(@"dealloc for wrapper called");
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
     NSString * const HyperTrackPublishableKey = token;
