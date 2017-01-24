@@ -58,4 +58,9 @@ module.exports = {
     endShift(success, failure) {
         RNHyperTrack.endShift(success, failure);
     }
+
+    // Method to start LocationService in driver SDK
+    startLocationService(driverId, success, failure) {
+        RNHyperTrack.startLocationService(success, failure);
+    }    
 }
