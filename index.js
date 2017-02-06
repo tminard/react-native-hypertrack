@@ -61,6 +61,6 @@ module.exports = {
 
     // Method to start LocationService in driver SDK
     startLocationService(driverId, success, failure) {
-        RNHyperTrack.startLocationService(success, failure);
-    }    
+        RNHyperTrack.startLocationService(driverId, success, failure);
+    }
 }
