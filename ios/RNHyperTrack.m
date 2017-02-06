@@ -163,4 +163,21 @@ RCT_EXPORT_METHOD(endShift:(RCTResponseSenderBlock)successCallback
     }];
 }
 
+RCT_EXPORT_METHOD(startLocationService:(NSString *)driverId
+                  :(RCTResponseSenderBlock)successCallback
+                  :(RCTResponseSenderBlock)failureCallback)
+{
+    [[HTTransmitterClient sharedClient] startServiceForDriverID:driverId completion:^(NSError * _Nullable error) {
+        if (error) {
+            // Handle error and try again.
+            NSDictionary *failure = @{@"error" : error.localizedDescription};
+            failureCallback(@[failure]);
+        } else {
+            // If there is no error, return success
+            NSDictionary *success = @{@"startLocationService" : @""};
+            successCallback(@[success]);
+        }
+    }];
+}
+
 @end
