@@ -377,6 +377,48 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    @ReactMethod
+    public void startLocationService(final String driverID, final Callback successCallback, final Callback failureCallback) {
+        Context context = getReactApplicationContext();
+        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+
+        transmitterService.startLocationService(driverID, new HTStartDriverStatusCallback() {
+            @Override
+            public void onSuccess() {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("driver_id", driverID);
+
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+
+                    successCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                try {
+                    WritableMap result = Arguments.createMap();
+                    if (e == null) {
+                        result.putString("error", "");
+                    } else {
+                        result.putString("error", e.toString());
+                    }
+
+                    failureCallback.invoke(result);
+                } catch (Exception exception) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", exception.toString());
+
+                    failureCallback.invoke(result);
+                }
+            }
+        });
+    }
+
     @Override
     public void onHostDestroy() {
         LocalBroadcastManager.getInstance(getReactApplicationContext()).unregisterReceiver(mStatusBroadcastReceiver);
