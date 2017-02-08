@@ -2,6 +2,7 @@
 #import "RNHyperTrack.h"
 #import <HTTransmitter/HTTransmitter.h>
 #import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
 
 @implementation RNHyperTrack
 
@@ -70,7 +71,7 @@ RCT_EXPORT_METHOD(getConnectedDriver:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmitingLocation]]]);
+    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmittingLocation]]]);
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
@@ -136,7 +137,7 @@ RCT_EXPORT_METHOD(endAllTrips:(NSString *)driverId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
 {
-    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(NSError * _Nullable error) {
+    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
 
         if (error) {
             // Handle error and try again.
