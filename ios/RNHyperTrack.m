@@ -5,12 +5,35 @@
 
 @implementation RNHyperTrack
 
+@synthesize bridge = _bridge;
+
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
 }
 
 RCT_EXPORT_MODULE();
+
+-(id)init
+{
+    self = [super init];
+    if ( self ) {
+        NSLog(@"self is defined: %@", self);
+    }
+    NSLog(@"init for wrapper called");
+    [[NSNotificationCenter defaultCenter] addObserverForName:HTLocationServiceDidTerminate object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            NSLog(@"notification received for location service terminate : %@", note);
+            [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
+    }];
+
+    return self;
+}
+
+-(void)dealloc {
+    NSLog(@"dealloc for wrapper called");
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
