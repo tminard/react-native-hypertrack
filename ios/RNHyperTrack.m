@@ -2,8 +2,11 @@
 #import "RNHyperTrack.h"
 #import <HTTransmitter/HTTransmitter.h>
 #import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
 
 @implementation RNHyperTrack
+
+@synthesize bridge = _bridge;
 
 - (dispatch_queue_t)methodQueue
 {
@@ -11,6 +14,33 @@
 }
 
 RCT_EXPORT_MODULE();
+
+-(id)init
+{
+    self = [super init];
+    if ( self ) {
+        NSLog(@"self is defined: %@", self);
+    }
+    NSLog(@"init for wrapper called");
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStoppedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        NSLog(@"notification received for location service terminate : %@", note);
+        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
+    }];
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStartedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        NSLog(@"notification received for location service start : %@", note);
+        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsActive" body:nil];
+    }];
+
+    return self;
+}
+
+-(void)dealloc {
+    NSLog(@"dealloc for wrapper called");
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
@@ -47,7 +77,7 @@ RCT_EXPORT_METHOD(getConnectedDriver:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
 {
-    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmitingLocation]]]);
+    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmittingLocation]]]);
 }
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
@@ -113,7 +143,7 @@ RCT_EXPORT_METHOD(endAllTrips:(NSString *)driverId
                   :(RCTResponseSenderBlock)successCallback
                   :(RCTResponseSenderBlock)failureCallback)
 {
-    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(NSError * _Nullable error) {
+    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
 
         if (error) {
             // Handle error and try again.
