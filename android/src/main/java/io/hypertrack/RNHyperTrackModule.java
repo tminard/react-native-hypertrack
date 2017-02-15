@@ -190,7 +190,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     String tripJson = gson.toJson(htTrip);
 
                     WritableMap result = Arguments.createMap();
-                    result.putBoolean("is_offline", isOffline);
                     result.putString("trip", tripJson);
                     successCallback.invoke(result);
                 } catch (Exception e) {
@@ -247,7 +246,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     String tripJson = gson.toJson(htTrip);
 
                     WritableMap result = Arguments.createMap();
-                    result.putBoolean("is_offline", isOffline);
                     result.putString("trip", tripJson);
                     successCallback.invoke(result);
                 } catch (Exception e) {
