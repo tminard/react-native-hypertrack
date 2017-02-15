@@ -39,6 +39,7 @@ import io.hypertrack.lib.transmitter.model.callback.HTShiftStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTEndAllTripsCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
+import io.hypertrack.lib.transmitter.model.callback.HTStartDriverStatusCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
