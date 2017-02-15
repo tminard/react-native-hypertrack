@@ -22,9 +22,15 @@ RCT_EXPORT_MODULE();
         NSLog(@"self is defined: %@", self);
     }
     NSLog(@"init for wrapper called");
-    [[NSNotificationCenter defaultCenter] addObserverForName:HTLocationServiceDidTerminate object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-            NSLog(@"notification received for location service terminate : %@", note);
-            [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStoppedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        NSLog(@"notification received for location service terminate : %@", note);
+        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
+    }];
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStartedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        NSLog(@"notification received for location service start : %@", note);
+        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsActive" body:nil];
     }];
 
     return self;

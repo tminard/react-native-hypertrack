@@ -37,8 +37,8 @@ import io.hypertrack.lib.transmitter.model.HTShiftParamsBuilder;
 import io.hypertrack.lib.transmitter.model.TransmitterConstants;
 import io.hypertrack.lib.transmitter.model.callback.HTShiftStatusCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
-import io.hypertrack.lib.transmitter.model.callback.HTEndAllTripsCallback;
 import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
+import io.hypertrack.lib.transmitter.model.callback.HTStartDriverStatusCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,13 +126,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
 
         transmitterService.startTrip(htTripParams, new HTTripStatusCallback() {
             @Override
-            public void onSuccess(boolean isOffline, HTTrip htTrip) {
+            public void onSuccess(HTTrip htTrip) {
                 try {
                     Gson gson = new Gson();
                     String tripJson = gson.toJson(htTrip);
 
                     WritableMap result = Arguments.createMap();
-                    result.putBoolean("is_offline", isOffline);
                     result.putString("trip", tripJson);
 
                     successCallback.invoke(result);
@@ -140,6 +139,19 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     WritableMap result = Arguments.createMap();
                     result.putString("error", e.toString());
 
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    WritableMap result = Arguments.createMap();
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
                     failureCallback.invoke(result);
                 }
             }
@@ -170,21 +182,33 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         Context context = getReactApplicationContext();
         HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
 
-        transmitterService.endTrip(tripID, new HTTripStatusCallback() {
+        transmitterService.endTrip(new HTTripStatusCallback() {
             @Override
-            public void onSuccess(boolean isOffline, HTTrip htTrip) {
+            public void onSuccess(HTTrip htTrip) {
                 try {
                     Gson gson = new Gson();
                     String tripJson = gson.toJson(htTrip);
 
                     WritableMap result = Arguments.createMap();
-                    result.putBoolean("is_offline", isOffline);
                     result.putString("trip", tripJson);
                     successCallback.invoke(result);
                 } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
                     result.putString("error", e.toString());
 
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    WritableMap result = Arguments.createMap();
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
                     failureCallback.invoke(result);
                 }
             }
@@ -214,10 +238,28 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         Context context = getReactApplicationContext();
         HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
 
-        transmitterService.endAllTrips(driverID, new HTEndAllTripsCallback() {
+        transmitterService.endAllTrips(driverID, new HTTripStatusCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(HTTrip htTrip) {
                 try {
+                    Gson gson = new Gson();
+                    String tripJson = gson.toJson(htTrip);
+
+                    WritableMap result = Arguments.createMap();
+                    result.putString("trip", tripJson);
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
                     WritableMap result = Arguments.createMap();
                     successCallback.invoke(result);
                 } catch (Exception e) {
@@ -274,6 +316,19 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
             }
 
             @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    WritableMap result = Arguments.createMap();
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
             public void onError(Exception error) {
                 try {
                     WritableMap result = Arguments.createMap();
@@ -307,6 +362,19 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     String shiftJson = gson.toJson(htShift);
                     WritableMap result = Arguments.createMap();
                     result.putString("shift", shiftJson);
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+                    failureCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    WritableMap result = Arguments.createMap();
                     successCallback.invoke(result);
                 } catch (Exception e) {
                     WritableMap result = Arguments.createMap();
@@ -353,6 +421,19 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                     result.putString("error", e.toString());
 
                     successCallback.invoke(result);
+                }
+            }
+
+            @Override
+            public void onOfflineSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    WritableMap result = Arguments.createMap();
+                    successCallback.invoke(result);
+                } catch (Exception e) {
+                    WritableMap result = Arguments.createMap();
+                    result.putString("error", e.toString());
+                    failureCallback.invoke(result);
                 }
             }
 
