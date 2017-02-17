@@ -100,7 +100,13 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     public void getConnectedDriver(final Callback callback) {
         Context context = getReactApplicationContext();
         HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-        callback.invoke(transmitterService.getDriverID());
+        String configuredDriverId = transmitterService.getDriverID();
+
+        if (transmitterService.isDriverConnected(configuredDriverId)) {
+            callback.invoke(configuredDriverId);
+        } else {
+            callback.invoke(null);
+        }
     }
 
     @ReactMethod
