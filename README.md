@@ -3,6 +3,9 @@ React native module for hypertrack-android and hypertrack-ios SDKs. Methods in t
 
 [![Slack Status](http://slack.hypertrack.io/badge.svg)](http://slack.hypertrack.io) [![npm version](https://badge.fury.io/js/react-native-hypertrack.svg)](https://badge.fury.io/js/react-native-hypertrack)
 
+## What's new in v0.4.+
+The v0.4.+ wrapper is built for HyperTrack v3, and will not work with the older SDKs. There will be breaking changes if you are upgrading - please refer to [docs.hypertrack.com](https://docs.hypertrack.com).
+
 ## Getting started
 In your project directory, install and link the module package from npm.
 ```
@@ -50,7 +53,7 @@ If you have some issues with Android, some common troubleshooting is [here](andr
 ## Usage
 
 #### Import and initialize SDK with your Publishable key before making any other API call
- 
+
 ```javascript
  import RNHyperTrack from 'react-native-hypertrack';
  ...
@@ -90,7 +93,7 @@ If you have some issues with Android, some common troubleshooting is [here](andr
    }
  );
 ```
-    
+
 #### Ending a trip
 ```javascript
  RNHyperTrack.endTrip(

@@ -14,53 +14,38 @@ module.exports = {
         RNHyperTrack.getPublishableKey(callback);
     },
 
-    // connect SDK to the backend for a driver id
-    connectDriver(driverId) {
-        RNHyperTrack.connectDriver(driverId);
+    // create a new user
+    createUser(name, callback) {
+        RNHyperTrack.createUser(driverId);
     },
 
-    // get connected driver id
-    getConnectedDriver(callback) {
-        RNHyperTrack.getConnectedDriver(callback);
+    // set a user with id
+    setUserId(userId) {
+        RNHyperTrack.setUserId(driverId);
     },
 
-    // get transmitting locations status
-    isTransmitting(callback) {
-        RNHyperTrack.isTransmitting(callback);
+    // get current user id
+    getUserId(callback) {
+        RNHyperTrack.getUserId(driverId);
     },
 
-    // Method to start trip in driver SDK
-    startTrip(driverId, taskIds, success, failure) {
-        RNHyperTrack.startTrip(driverId, taskIds, success, failure);
+    // start tracking
+    startTracking(callback) {
+        RNHyperTrack.startTracking(callback);
     },
 
-    // Method to complete task in driver SDK
-    completeTask(taskId, success, failure) {
-        RNHyperTrack.completeTask(taskId, success, failure);
+    // start tracking
+    stopTracking(callback) {
+        RNHyperTrack.stopTracking(callback);
     },
 
-    // Method to end trip in driver SDK
-    endTrip(tripId, success, failure) {
-        RNHyperTrack.endTrip(tripId, success, failure);
+    // get tracking status
+    isTracking(callback) {
+        RNHyperTrack.isTracking(callback);
     },
 
-    // Method to end all trips for driver in driver SDK
-    endAllTrips(driverId, success, failure) {
-        RNHyperTrack.endAllTrips(driverId, success, failure);
-    },
-
-    // Method to start shift in driver SDK
-    startShift(driverId, success, failure) {
-        RNHyperTrack.startShift(driverId, success, failure);
-    },
-
-    // Method to end shift in driver SDK
-    endShift(success, failure) {
-        RNHyperTrack.endShift(success, failure);
-    },
-
-    // Method to start LocationService in driver SDK
-    startLocationService(driverId, success, failure) {
-        RNHyperTrack.startLocationService(driverId, success, failure);
+    // Method to complete an action
+    completeAction(actionId, callback) {
+        RNHyperTrack.completeAction(actionId, callback);
     }
 }

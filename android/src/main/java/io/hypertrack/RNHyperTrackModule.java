@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import com.hypertrack.lib.HyperTrack;
+
 import io.hypertrack.lib.common.HyperTrack;
 import io.hypertrack.lib.transmitter.service.HTTransmitterService;
 import io.hypertrack.lib.transmitter.model.HTTrip;
@@ -76,8 +78,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void initialize(String publishableKey) {
-        HyperTrack.setPublishableApiKey(publishableKey, getReactApplicationContext());
-        HTTransmitterService.initHTTransmitter(getReactApplicationContext());
+        HyperTrack.initialize(getReactApplicationContext(), publishableKey);
     }
 
     @ReactMethod
