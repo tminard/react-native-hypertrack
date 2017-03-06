@@ -154,19 +154,19 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         private StatusBroadcastReceiver() { }
 
         public void onReceive(Context paramContext, Intent paramIntent) {
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
-                Bundle bundle = paramIntent.getExtras();
-                Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
-                RNHyperTrackModule.this.sendCurrentLocation(location);
-            }
-
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
-                RNHyperTrackModule.this.sendActiveIntent();
-            }
-
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT)) {
-                RNHyperTrackModule.this.sendInactiveIntent();
-            }
+            // if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
+            //     Bundle bundle = paramIntent.getExtras();
+            //     Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
+            //     RNHyperTrackModule.this.sendCurrentLocation(location);
+            // }
+            //
+            // if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
+            //     RNHyperTrackModule.this.sendActiveIntent();
+            // }
+            //
+            // if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT)) {
+            //     RNHyperTrackModule.this.sendInactiveIntent();
+            // }
         }
     }
 }
