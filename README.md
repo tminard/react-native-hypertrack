@@ -44,14 +44,14 @@ If you have some issues with Android, some common troubleshooting is [here](andr
     $ pod init
     ```
 
-2. Edit the Podfile to include `HTTransmitter` as a dependency for your project, and then install the pod.
+2. Edit the Podfile to include `HyperTrack` as a dependency for your project, and then install the pod with `pod install`.
     ```
-    $ cat Podfile
-    target 'YourApp' do
-      pod 'HTTransmitter'
-    end
+    use_frameworks!
+    platform :ios, '9.0'
 
-    $ pod install
+    target 'AwesomeProject' do
+      pod 'HyperTrack'
+    end
     ```
 
 3. Now, open the iOS project with the `.xcworkspace` file in Xcode, and add the native SDK `.a` files in the linked frameworks and libraries section. You need to add *libHTTransmitter.a*, *libHTCommon.a*, *libMQTTClient.a*.
