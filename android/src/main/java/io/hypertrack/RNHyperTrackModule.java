@@ -37,10 +37,12 @@ import com.google.gson.Gson;
 public class RNHyperTrackModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private final ReactApplicationContext reactContext;
+    private final StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+        this.mStatusBroadcastReceiver = new StatusBroadcastReceiver();
 
         // Set Callback to receive events & errors
         HyperTrack.setCallback(new HyperTrackEventCallback() {
@@ -67,7 +69,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void getPublishableKey(final Callback successCallback, final Callback errorCallback) {
+    public void getPublishableKey(final Callback callback) {
         Context context = getReactApplicationContext();
         callback.invoke(HyperTrack.getPublishableKey(context));
     }
@@ -103,7 +105,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         HyperTrack.startTracking(new HyperTrackCallback() {
             @Override
             public void onSuccess(@NonNull SuccessResponse response) {
-                // Return UserId in successCallback
+                // Return User object in successCallback
                 successCallback.invoke(response.getResponseObject());
             }
 
@@ -129,7 +131,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         HyperTrack.stopTracking(new HyperTrackCallback() {
             @Override
             public void onSuccess(@NonNull SuccessResponse successResponse) {
-                // Return UserId in successCallback
                 successCallback.invoke(response.getResponseObject());
             }
 
@@ -142,6 +143,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostDestroy() {
+        LocalBroadcastManager.getInstance(getReactApplicationContext()).unregisterReceiver(mStatusBroadcastReceiver);
     }
 
     @Override
@@ -164,26 +166,31 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         return arrayList;
     }
 
-    private void sendCurrentLocation(Location location) {
+    private void sendCurrentLocation(HyperTrackLocation hyperTrackLocation) {
         WritableMap params = Arguments.createMap();
+        GeoJSONLocation location = hyperTrackLocation.getGeoJSONLocation();
+
         params.putDouble("latitude", location.getLatitude());
         params.putDouble("longitude", location.getLongitude());
         sendEvent("currentLocationDidChange", params);
-    }
-
-    private void sendActiveIntent() {
-        WritableMap params = Arguments.createMap();
-        sendEvent("driverIsActive", params);
-    }
-
-    private void sendInactiveIntent() {
-        WritableMap params = Arguments.createMap();
-        sendEvent("driverIsInactive", params);
     }
 
     private void sendEvent(String eventName, WritableMap params) {
         getReactApplicationContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
+    }
+
+    private class StatusBroadcastReceiver extends BroadcastReceiver {
+        private StatusBroadcastReceiver() { }
+
+        public void onReceive(Context paramContext, Intent paramIntent) {
+             if (paramIntent.getAction().equals(HyperTrackConstants.HT_USER_CURRENT_LOCATION_INTENT)) {
+                 HyperTrackLocation location = (HyperTrackLocation) paramIntent.getSerializableExtra(
+                         HyperTrackConstants.HT_USER_CURRENT_LOCATION_KEY);
+
+                 RNHyperTrackModule.this.sendCurrentLocation(location);
+             }
+        }
     }
 }
