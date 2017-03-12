@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.react.bridge.NativeModule;
@@ -32,6 +33,9 @@ import com.hypertrack.lib.callbacks.HyperTrackCallback;
 import com.hypertrack.lib.callbacks.HyperTrackEventCallback;
 import com.hypertrack.lib.internal.transmitter.models.HyperTrackLocation;
 import com.hypertrack.lib.internal.common.models.GeoJSONLocation;
+import com.hypertrack.lib.internal.transmitter.models.HyperTrackEvent;
+import com.hypertrack.lib.models.ErrorResponse;
+import com.hypertrack.lib.models.SuccessResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -135,7 +139,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     public void stopTracking(final Callback successCallback, final Callback errorCallback) {
         HyperTrack.stopTracking(new HyperTrackCallback() {
             @Override
-            public void onSuccess(@NonNull SuccessResponse successResponse) {
+            public void onSuccess(@NonNull SuccessResponse response) {
                 successCallback.invoke(response.getResponseObject());
             }
 
