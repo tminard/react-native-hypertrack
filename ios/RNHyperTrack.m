@@ -1,8 +1,8 @@
 
 #import "RNHyperTrack.h"
-#import <HTTransmitter/HTTransmitter.h>
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
+@import HyperTrack;
 
 @implementation RNHyperTrack
 
@@ -44,8 +44,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
-    NSString * const HyperTrackPublishableKey = token;
-    [HyperTrack setPublishableAPIKey:HyperTrackPublishableKey];
+    [HyperTrack initialize:token];
 }
 
 RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
@@ -59,155 +58,44 @@ RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
     }
 }
 
-RCT_EXPORT_METHOD(connectDriver:(NSString *)driverID)
-{
-    [[HTTransmitterClient sharedClient] connectDriverWithDriverID:driverID completion:nil];
-}
-
-RCT_EXPORT_METHOD(getConnectedDriver:(RCTResponseSenderBlock)callback)
-{
-    NSString *driverID = [[HTTransmitterClient sharedClient] activeDriverID];
-
-    if (driverID) {
-        callback(@[driverID]);
-    } else {
-        callback(@[@""]);
-    }
-}
-
-RCT_EXPORT_METHOD(isTransmitting:(RCTResponseSenderBlock)callback)
-{
-    callback(@[[NSNumber numberWithBool:[[HTTransmitterClient sharedClient] transmittingLocation]]]);
-}
-
-RCT_EXPORT_METHOD(startTrip:(NSString *)driverId
-                  :(NSArray *)taskIds
+RCT_EXPORT_METHOD(createUser:(NSString *)name
                   :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+                  :(RCTResponseSenderBlock)errorCallback)
 {
-    HTTripParams* tripParams = [[HTTripParams alloc] init];
-    tripParams.driverID = driverId;
-    tripParams.taskIDs = taskIds;
-
-    [[HTTransmitterClient sharedClient] startTripWithTripParams:tripParams completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the tripID received in the callback in your app.
-            NSDictionary *success = @{@"trip" : response.result.dictionaryValue.jsonString};
-            successCallback(@[success]);
-        }
-    }];
+    //
 }
 
-RCT_EXPORT_METHOD(completeTask:(NSString *)taskId
-                  :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(setUserId:(NSString *)userId)
 {
-    // Mark task as completed by passing taskID
-    [[HTTransmitterClient sharedClient] completeTaskWithTaskID:taskId completion:^(HTResponse <HTTask *> * _Nullable response, NSError * _Nullable error) {
-
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the taskID received in the callback in your app.
-            NSDictionary *success = @{@"task" : response.result.dictionaryValue.jsonString};
-            successCallback(@[success]);
-        }
-    }];
+    [HyperTrack setUserId:userId];
 }
 
-RCT_EXPORT_METHOD(endTrip:(NSString *)tripId
-                  :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback)
 {
-    [[HTTransmitterClient sharedClient] endTripWithTripID:tripId completion:^(HTResponse <HTTrip *> * _Nullable response, NSError * _Nullable error) {
-
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"trip" : response.result.dictionaryValue.jsonString};
-            successCallback(@[success]);
-        }
-    }];
+    //
 }
 
-RCT_EXPORT_METHOD(endAllTrips:(NSString *)driverId
-                  :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(startTracking:(RCTResponseSenderBlock)successCallback
+                               :(RCTResponseSenderBlock)errorCallback)
 {
-    [[HTTransmitterClient sharedClient] endAllTripsWithCompletion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
-
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{};
-            successCallback(@[success]);
-        }
-    }];
+    [HyperTrack startTracking];
 }
 
-RCT_EXPORT_METHOD(startShift:(NSString *)driverId
-                  :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(stopTracking:(RCTResponseSenderBlock)successCallback
+                              :(RCTResponseSenderBlock)errorCallback)
 {
-    HTShiftParams *shiftParams = [[HTShiftParams alloc] init];
-    shiftParams.driverID = driverId;
-
-    [[HTTransmitterClient sharedClient] startShiftWithShiftParams:shiftParams completion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"shift" : @""};
-            successCallback(@[success]);
-        }
-    }];
+    [HyperTrack stopTracking];
 }
 
-RCT_EXPORT_METHOD(endShift:(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(isTracking:(RCTResponseSenderBlock)callback)
 {
-    [[HTTransmitterClient sharedClient] endShiftWithCompletion:^(HTResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, use the trip received in the callback in your app.
-            NSDictionary *success = @{@"shift" : @""};
-            successCallback(@[success]);
-        }
-    }];
+    //
 }
 
-RCT_EXPORT_METHOD(startLocationService:(NSString *)driverId
-                  :(RCTResponseSenderBlock)successCallback
-                  :(RCTResponseSenderBlock)failureCallback)
+RCT_EXPORT_METHOD(completeAction:(NSString *)actionId
+                  :(RCTResponseSenderBlock)callback)
 {
-    [[HTTransmitterClient sharedClient] startServiceForDriverID:driverId completion:^(NSError * _Nullable error) {
-        if (error) {
-            // Handle error and try again.
-            NSDictionary *failure = @{@"error" : error.localizedDescription};
-            failureCallback(@[failure]);
-        } else {
-            // If there is no error, return success
-            NSDictionary *success = @{@"startLocationService" : @""};
-            successCallback(@[success]);
-        }
-    }];
+    //
 }
 
 @end

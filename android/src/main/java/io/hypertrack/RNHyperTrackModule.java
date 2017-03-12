@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.facebook.react.bridge.NativeModule;
@@ -26,19 +27,15 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import io.hypertrack.lib.common.HyperTrack;
-import io.hypertrack.lib.transmitter.service.HTTransmitterService;
-import io.hypertrack.lib.transmitter.model.HTTrip;
-import io.hypertrack.lib.transmitter.model.HTTripParams;
-import io.hypertrack.lib.transmitter.model.HTTripParamsBuilder;
-import io.hypertrack.lib.transmitter.model.HTShift;
-import io.hypertrack.lib.transmitter.model.HTShiftParams;
-import io.hypertrack.lib.transmitter.model.HTShiftParamsBuilder;
-import io.hypertrack.lib.transmitter.model.TransmitterConstants;
-import io.hypertrack.lib.transmitter.model.callback.HTShiftStatusCallback;
-import io.hypertrack.lib.transmitter.model.callback.HTTripStatusCallback;
-import io.hypertrack.lib.transmitter.model.callback.HTCompleteTaskStatusCallback;
-import io.hypertrack.lib.transmitter.model.callback.HTStartDriverStatusCallback;
+import com.hypertrack.lib.HyperTrack;
+import com.hypertrack.lib.HyperTrackConstants;
+import com.hypertrack.lib.callbacks.HyperTrackCallback;
+import com.hypertrack.lib.callbacks.HyperTrackEventCallback;
+import com.hypertrack.lib.internal.transmitter.models.HyperTrackLocation;
+import com.hypertrack.lib.internal.common.models.GeoJSONLocation;
+import com.hypertrack.lib.internal.transmitter.models.HyperTrackEvent;
+import com.hypertrack.lib.models.ErrorResponse;
+import com.hypertrack.lib.models.SuccessResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,11 +53,18 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         this.reactContext = reactContext;
         this.mStatusBroadcastReceiver = new StatusBroadcastReceiver();
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT);
-        filter.addAction(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT);
-        filter.addAction(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT);
-        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(mStatusBroadcastReceiver, filter);
+        // Set Callback to receive events & errors
+        HyperTrack.setCallback(new HyperTrackEventCallback() {
+            @Override
+            public void onEvent(@NonNull final HyperTrackEvent event) {
+                // handle event received here
+            }
+
+            @Override
+            public void onError(@NonNull final ErrorResponse errorResponse) {
+                // handle event received here
+            }
+        });
     }
 
     @Override
@@ -68,16 +72,9 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         return "RNHyperTrack";
     }
 
-    @Override
-    public Map<String, Object> getConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        return constants;
-    }
-
     @ReactMethod
     public void initialize(String publishableKey) {
-        HyperTrack.setPublishableApiKey(publishableKey, getReactApplicationContext());
-        HTTransmitterService.initHTTransmitter(getReactApplicationContext());
+        HyperTrack.initialize(getReactApplicationContext(), publishableKey);
     }
 
     @ReactMethod
@@ -87,415 +84,68 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void show(String message, int duration) {
-        Toast.makeText(getReactApplicationContext(), message, duration).show();
-    }
-
-    @ReactMethod
-    public void connectDriver(String driverID) {
-        HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
-    }
-
-    @ReactMethod
-    public void getConnectedDriver(final Callback callback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-        callback.invoke(transmitterService.getDriverID());
-    }
-
-    @ReactMethod
-    public void isTransmitting(final Callback callback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-        callback.invoke(transmitterService.isDriverLive());
-    }
-
-    @ReactMethod
-    public void startTrip(String driverID, ReadableArray taskIDList, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        ArrayList<String> taskIDs= this.toArrayList(taskIDList);
-
-        HTTripParams htTripParams = new HTTripParamsBuilder().setDriverID(driverID)
-                .setTaskIDs(taskIDs)
-                .setOrderedTasks(false)
-                .setIsAutoEnded(false)
-                .createHTTripParams();
-
-
-        transmitterService.startTrip(htTripParams, new HTTripStatusCallback() {
+    public void createUser(String userName, final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.createUser(userName, new HyperTrackCallback() {
             @Override
-            public void onSuccess(HTTrip htTrip) {
-                try {
-                    Gson gson = new Gson();
-                    String tripJson = gson.toJson(htTrip);
-
-                    WritableMap result = Arguments.createMap();
-                    result.putString("trip", tripJson);
-
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    failureCallback.invoke(result);
-                }
+            public void onSuccess(@NonNull SuccessResponse response) {
+                // Return User object in successCallback
+                successCallback.invoke(response.getResponseObject());
             }
 
             @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception error) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (error == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", error.toString());
-                    }
-
-                    failureCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    failureCallback.invoke(result);
-                }
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
             }
         });
     }
 
     @ReactMethod
-    public void endTrip(String tripID, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
+    public void setUserId(String userId) {
+        HyperTrack.setUserId(userId);
+    }
 
-        transmitterService.endTrip(new HTTripStatusCallback() {
+    @ReactMethod
+    public void getUserId(final Callback callback) {
+        callback.invoke(HyperTrack.getUserId());
+    }
+
+    @ReactMethod
+    public void startTracking(final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.startTracking(new HyperTrackCallback() {
             @Override
-            public void onSuccess(HTTrip htTrip) {
-                try {
-                    Gson gson = new Gson();
-                    String tripJson = gson.toJson(htTrip);
-
-                    WritableMap result = Arguments.createMap();
-                    result.putString("trip", tripJson);
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    failureCallback.invoke(result);
-                }
+            public void onSuccess(@NonNull SuccessResponse response) {
+                // Return User object in successCallback
+                successCallback.invoke(response.getResponseObject());
             }
 
             @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (e == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", e.toString());
-                    }
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-
-                    failureCallback.invoke(result);
-                }
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
             }
         });
     }
 
     @ReactMethod
-    public void endAllTrips(String driverID, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        transmitterService.endAllTrips(driverID, new HTTripStatusCallback() {
-            @Override
-            public void onSuccess(HTTrip htTrip) {
-                try {
-                    Gson gson = new Gson();
-                    String tripJson = gson.toJson(htTrip);
-
-                    WritableMap result = Arguments.createMap();
-                    result.putString("trip", tripJson);
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (e == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", e.toString());
-                    }
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-        });
+    public void isTracking(final Callback callback) {
+        callback.invoke(HyperTrack.isTracking());
     }
 
     @ReactMethod
-    public void startShift(String driverID, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        HTShiftParamsBuilder htShiftParamsBuilder = new HTShiftParamsBuilder();
-        HTShiftParams htShiftParams = htShiftParamsBuilder.setDriverID(driverID).createHTShiftParams();
-
-        transmitterService.startShift(htShiftParams, new HTShiftStatusCallback() {
-            @Override
-            public void onSuccess(HTShift htShift) {
-                try {
-                    Gson gson = new Gson();
-                    String shiftJson = gson.toJson(htShift);
-
-                    WritableMap result = Arguments.createMap();
-                    result.putString("trip", shiftJson);
-
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception error) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (error == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", error.toString());
-                    }
-
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-
-                    failureCallback.invoke(result);
-                }
-            }
-        });
+    public void completeAction(String actionId) {
+        HyperTrack.completeAction(actionId);
     }
 
     @ReactMethod
-    public void endShift(final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        transmitterService.endShift(new HTShiftStatusCallback() {
+    public void stopTracking(final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.stopTracking(new HyperTrackCallback() {
             @Override
-            public void onSuccess(HTShift htShift) {
-                try {
-                    Gson gson = new Gson();
-                    String shiftJson = gson.toJson(htShift);
-                    WritableMap result = Arguments.createMap();
-                    result.putString("shift", shiftJson);
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
+            public void onSuccess(@NonNull SuccessResponse response) {
+                successCallback.invoke(response.getResponseObject());
             }
 
             @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (e == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", e.toString());
-                    }
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-
-                    failureCallback.invoke(result);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void completeTask(String taskID, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        transmitterService.completeTask(taskID, new HTCompleteTaskStatusCallback() {
-            @Override
-            public void onSuccess(String taskID) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("task_id", taskID);
-
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    successCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onOfflineSuccess() {
-                try {
-                    Gson gson = new Gson();
-                    WritableMap result = Arguments.createMap();
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-                    failureCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (e == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", e.toString());
-                    }
-
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-
-                    failureCallback.invoke(result);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void startLocationService(final String driverID, final Callback successCallback, final Callback failureCallback) {
-        Context context = getReactApplicationContext();
-        HTTransmitterService transmitterService = HTTransmitterService.getInstance(context);
-
-        transmitterService.startLocationService(driverID, new HTStartDriverStatusCallback() {
-            @Override
-            public void onSuccess() {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("driver_id", driverID);
-
-                    successCallback.invoke(result);
-                } catch (Exception e) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", e.toString());
-
-                    successCallback.invoke(result);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                try {
-                    WritableMap result = Arguments.createMap();
-                    if (e == null) {
-                        result.putString("error", "");
-                    } else {
-                        result.putString("error", e.toString());
-                    }
-
-                    failureCallback.invoke(result);
-                } catch (Exception exception) {
-                    WritableMap result = Arguments.createMap();
-                    result.putString("error", exception.toString());
-
-                    failureCallback.invoke(result);
-                }
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
             }
         });
     }
@@ -525,21 +175,13 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         return arrayList;
     }
 
-    private void sendCurrentLocation(Location location) {
+    private void sendCurrentLocation(HyperTrackLocation hyperTrackLocation) {
         WritableMap params = Arguments.createMap();
+        GeoJSONLocation location = hyperTrackLocation.getGeoJSONLocation();
+
         params.putDouble("latitude", location.getLatitude());
         params.putDouble("longitude", location.getLongitude());
         sendEvent("currentLocationDidChange", params);
-    }
-
-    private void sendActiveIntent() {
-        WritableMap params = Arguments.createMap();
-        sendEvent("driverIsActive", params);
-    }
-
-    private void sendInactiveIntent() {
-        WritableMap params = Arguments.createMap();
-        sendEvent("driverIsInactive", params);
     }
 
     private void sendEvent(String eventName, WritableMap params) {
@@ -552,19 +194,12 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         private StatusBroadcastReceiver() { }
 
         public void onReceive(Context paramContext, Intent paramIntent) {
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
-                Bundle bundle = paramIntent.getExtras();
-                Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
-                RNHyperTrackModule.this.sendCurrentLocation(location);
-            }
+             if (paramIntent.getAction().equals(HyperTrackConstants.HT_USER_CURRENT_LOCATION_INTENT)) {
+                 HyperTrackLocation location = (HyperTrackLocation) paramIntent.getSerializableExtra(
+                         HyperTrackConstants.HT_USER_CURRENT_LOCATION_KEY);
 
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
-                RNHyperTrackModule.this.sendActiveIntent();
-            }
-
-            if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT)) {
-                RNHyperTrackModule.this.sendInactiveIntent();
-            }
+                 RNHyperTrackModule.this.sendCurrentLocation(location);
+             }
         }
     }
 }
