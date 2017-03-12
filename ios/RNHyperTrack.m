@@ -1,8 +1,8 @@
 
 #import "RNHyperTrack.h"
-#import <HTTransmitter/HTTransmitter.h>
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
+@import HyperTrack;
 
 @implementation RNHyperTrack
 
@@ -44,8 +44,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
 {
-    NSString * const HyperTrackPublishableKey = token;
-    [HyperTrack setPublishableAPIKey:HyperTrackPublishableKey];
+    [HyperTrack initialize:token];
 }
 
 RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
@@ -67,7 +66,7 @@ RCT_EXPORT_METHOD(createUser:(NSString *)name
 
 RCT_EXPORT_METHOD(setUserId:(NSString *)userId)
 {
-    //
+    [HyperTrack setUserId:userId];
 }
 
 RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback)
@@ -77,12 +76,12 @@ RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(startTracking:(RCTResponseSenderBlock)callback)
 {
-    //
+    [HyperTrack startTracking];
 }
 
 RCT_EXPORT_METHOD(stopTracking:(RCTResponseSenderBlock)callback)
 {
-    //
+    [HyperTrack stopTracking];
 }
 
 RCT_EXPORT_METHOD(isTracking:(RCTResponseSenderBlock)callback)
