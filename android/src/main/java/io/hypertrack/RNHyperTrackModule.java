@@ -37,18 +37,23 @@ import com.google.gson.Gson;
 public class RNHyperTrackModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private final ReactApplicationContext reactContext;
-    private final StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     public RNHyperTrackModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        this.mStatusBroadcastReceiver = new StatusBroadcastReceiver();
 
-        IntentFilter filter = new IntentFilter();
-        // filter.addAction(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT);
-        // filter.addAction(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT);
-        // filter.addAction(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT);
-        LocalBroadcastManager.getInstance(getReactApplicationContext()).registerReceiver(mStatusBroadcastReceiver, filter);
+        // Set Callback to receive events & errors
+        HyperTrack.setCallback(new HyperTrackEventCallback() {
+            @Override
+            public void onEvent(@NonNull final HyperTrackEvent event) {
+                // handle event received here
+            }
+
+            @Override
+            public void onError(@NonNull final ErrorResponse errorResponse) {
+                // handle event received here
+            }
+        });
     }
 
     @Override
@@ -62,49 +67,81 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void getPublishableKey(final Callback callback) {
+    public void getPublishableKey(final Callback successCallback, final Callback errorCallback) {
         Context context = getReactApplicationContext();
         callback.invoke(HyperTrack.getPublishableKey(context));
     }
 
     @ReactMethod
-    public void createUser(String name, final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+    public void createUser(String name, final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.createUser(userName, new HyperTrackCallback() {
+            @Override
+            public void onSuccess(@NonNull SuccessResponse response) {
+                // Return User object in successCallback
+                successCallback.invoke(response.getResponseObject());
+            }
+
+            @Override
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
+            }
+        });
     }
 
     @ReactMethod
     public void setUserId(String userId) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+        HyperTrack.setUserId(userId);
     }
 
     @ReactMethod
     public void getUserId(final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+        callback.invoke(HyperTrack.getUserId());
     }
 
     @ReactMethod
-    public void startTracking(final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
-    }
+    public void startTracking(final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.startTracking(new HyperTrackCallback() {
+            @Override
+            public void onSuccess(@NonNull SuccessResponse response) {
+                // Return UserId in successCallback
+                successCallback.invoke(response.getResponseObject());
+            }
 
-    @ReactMethod
-    public void stopTracking(final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+            @Override
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
+            }
+        });
     }
 
     @ReactMethod
     public void isTracking(final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+        callback.invoke(HyperTrack.isTracking());
     }
 
     @ReactMethod
-    public void completeAction(String actionId, final Callback callback) {
-        // HTTransmitterService.connectDriver(getReactApplicationContext(), driverID);
+    public void completeAction(String actionId) {
+        HyperTrack.completeAction(actionId);
+    }
+
+    @ReactMethod
+    public void stopTracking(final Callback successCallback, final Callback errorCallback) {
+        HyperTrack.stopTracking(new HyperTrackCallback() {
+            @Override
+            public void onSuccess(@NonNull SuccessResponse successResponse) {
+                // Return UserId in successCallback
+                successCallback.invoke(response.getResponseObject());
+            }
+
+            @Override
+            public void onError(@NonNull ErrorResponse errorResponse) {
+                errorCallback.invoke(errorResponse);
+            }
+        });
     }
 
     @Override
     public void onHostDestroy() {
-        LocalBroadcastManager.getInstance(getReactApplicationContext()).unregisterReceiver(mStatusBroadcastReceiver);
     }
 
     @Override
@@ -148,25 +185,5 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         getReactApplicationContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
-    }
-
-    private class StatusBroadcastReceiver extends BroadcastReceiver {
-        private StatusBroadcastReceiver() { }
-
-        public void onReceive(Context paramContext, Intent paramIntent) {
-            // if (paramIntent.getAction().equals(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_INTENT)) {
-            //     Bundle bundle = paramIntent.getExtras();
-            //     Location location = bundle.getParcelable(TransmitterConstants.HT_DRIVER_CURRENT_LOCATION_KEY);
-            //     RNHyperTrackModule.this.sendCurrentLocation(location);
-            // }
-            //
-            // if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_LOCATION_SERVICE_STARTED_INTENT)) {
-            //     RNHyperTrackModule.this.sendActiveIntent();
-            // }
-            //
-            // if (paramIntent.getAction().equals(TransmitterConstants.HT_ON_DRIVER_NOT_ACTIVE_INTENT)) {
-            //     RNHyperTrackModule.this.sendInactiveIntent();
-            // }
-        }
     }
 }

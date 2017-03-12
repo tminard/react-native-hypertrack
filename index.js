@@ -1,4 +1,3 @@
-
 import { NativeModules } from 'react-native';
 
 const { RNHyperTrack } = NativeModules;
@@ -15,28 +14,28 @@ module.exports = {
     },
 
     // create a new user
-    createUser(name, callback) {
-        RNHyperTrack.createUser(driverId);
+    createUser(name, successCallback, errorCallback) {
+        RNHyperTrack.createUser(driverId, successCallback, errorCallback);
     },
 
     // set a user with id
     setUserId(userId) {
-        RNHyperTrack.setUserId(driverId);
+        RNHyperTrack.setUserId(userId);
     },
 
     // get current user id
     getUserId(callback) {
-        RNHyperTrack.getUserId(driverId);
+        RNHyperTrack.getUserId(callback);
     },
 
     // start tracking
-    startTracking(callback) {
-        RNHyperTrack.startTracking(callback);
+    startTracking(successCallback, errorCallback) {
+        RNHyperTrack.startTracking(successCallback, errorCallback);
     },
 
     // start tracking
-    stopTracking(callback) {
-        RNHyperTrack.stopTracking(callback);
+    stopTracking(successCallback, errorCallback) {
+        RNHyperTrack.stopTracking(successCallback, errorCallback);
     },
 
     // get tracking status
@@ -45,7 +44,7 @@ module.exports = {
     },
 
     // Method to complete an action
-    completeAction(actionId, callback) {
-        RNHyperTrack.completeAction(actionId, callback);
+    completeAction(actionId) {
+        RNHyperTrack.completeAction(actionId);
     }
 }
