@@ -27,6 +27,11 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 import com.hypertrack.lib.HyperTrack;
+import com.hypertrack.lib.HyperTrackConstants;
+import com.hypertrack.lib.callbacks.HyperTrackCallback;
+import com.hypertrack.lib.callbacks.HyperTrackEventCallback;
+import com.hypertrack.lib.internal.transmitter.models.HyperTrackLocation;
+import com.hypertrack.lib.internal.common.models.GeoJSONLocation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,7 +80,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void createUser(String name, final Callback successCallback, final Callback errorCallback) {
+    public void createUser(String userName, final Callback successCallback, final Callback errorCallback) {
         HyperTrack.createUser(userName, new HyperTrackCallback() {
             @Override
             public void onSuccess(@NonNull SuccessResponse response) {
