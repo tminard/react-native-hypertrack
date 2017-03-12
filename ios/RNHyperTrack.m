@@ -59,7 +59,8 @@ RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
 }
 
 RCT_EXPORT_METHOD(createUser:(NSString *)name
-                  :(RCTResponseSenderBlock)callback)
+                  :(RCTResponseSenderBlock)successCallback
+                  :(RCTResponseSenderBlock)errorCallback)
 {
     //
 }
@@ -74,12 +75,14 @@ RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback)
     //
 }
 
-RCT_EXPORT_METHOD(startTracking:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(startTracking:(RCTResponseSenderBlock)successCallback
+                               :(RCTResponseSenderBlock)errorCallback)
 {
     [HyperTrack startTracking];
 }
 
-RCT_EXPORT_METHOD(stopTracking:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(stopTracking:(RCTResponseSenderBlock)successCallback
+                              :(RCTResponseSenderBlock)errorCallback)
 {
     [HyperTrack stopTracking];
 }
