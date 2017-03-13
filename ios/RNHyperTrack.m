@@ -2,6 +2,7 @@
 #import "RNHyperTrack.h"
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
+#import <HyperTrack/HyperTrack.h>
 
 @implementation RNHyperTrack
 
@@ -22,15 +23,15 @@ RCT_EXPORT_MODULE();
     }
     NSLog(@"init for wrapper called");
 
-    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStoppedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        NSLog(@"notification received for location service terminate : %@", note);
-        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
-    }];
-
-    [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStartedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        NSLog(@"notification received for location service start : %@", note);
-        [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsActive" body:nil];
-    }];
+    // [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStoppedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    //     NSLog(@"notification received for location service terminate : %@", note);
+    //     [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsInactive" body:nil];
+    // }];
+    //
+    // [[NSNotificationCenter defaultCenter] addObserverForName:HTOnLocationServiceStartedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    //     NSLog(@"notification received for location service start : %@", note);
+    //     [self.bridge.eventDispatcher sendAppEventWithName:@"driverIsActive" body:nil];
+    // }];
 
     return self;
 }
@@ -38,7 +39,7 @@ RCT_EXPORT_MODULE();
 -(void)dealloc {
     NSLog(@"dealloc for wrapper called");
 
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    // [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 RCT_EXPORT_METHOD(initialize:(NSString *)token)
@@ -48,13 +49,13 @@ RCT_EXPORT_METHOD(initialize:(NSString *)token)
 
 RCT_EXPORT_METHOD(getPublishableKey:(RCTResponseSenderBlock)callback)
 {
-    NSString *publishableKey = [HyperTrack publishableKey];
-
-    if (publishableKey) {
-        callback(@[publishableKey]);
-    } else {
-        callback(@[@""]);
-    }
+    // NSString *publishableKey = [HyperTrack publishableKey];
+    //
+    // if (publishableKey) {
+    //     callback(@[publishableKey]);
+    // } else {
+    //     callback(@[@""]);
+    // }
 }
 
 RCT_EXPORT_METHOD(createUser:(NSString *)name
@@ -78,12 +79,21 @@ RCT_EXPORT_METHOD(startTracking:(RCTResponseSenderBlock)successCallback
                                :(RCTResponseSenderBlock)errorCallback)
 {
     [HyperTrack startTracking];
+
+    [HyperTrack startTrackingWithCompletionHandler:^(HyperTrackError * _Nullable error) {
+    if (error) {
+      NSLog(@"error");
+      NSLog(@"%@", error);
+    }
+
+    NSLog(@"success");
+  }];
 }
 
 RCT_EXPORT_METHOD(stopTracking:(RCTResponseSenderBlock)successCallback
                               :(RCTResponseSenderBlock)errorCallback)
 {
-    [HyperTrack stopTracking];
+    // [HyperTrack stopTracking];
 }
 
 RCT_EXPORT_METHOD(isTracking:(RCTResponseSenderBlock)callback)
