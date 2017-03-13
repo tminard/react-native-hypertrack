@@ -2,7 +2,6 @@
 #import "RNHyperTrack.h"
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
-@import HyperTrack;
 
 @implementation RNHyperTrack
 
