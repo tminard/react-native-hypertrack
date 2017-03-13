@@ -32,7 +32,7 @@ In your `android/app/build.gradle` file, update the following:
 
 ```
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 ```
 
 If you have some issues with Android, some common troubleshooting is [here](android-troubleshooting.md).
