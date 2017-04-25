@@ -134,7 +134,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void createAndAssignAction(final Callback successCallback, final Callback errorCallback) {
         // TODO
-        ActionParams params = new ActionParamsBuilder().build();
+        ActionParams actionParams = new ActionParamsBuilder().build();
 
         HyperTrack.createAndAssignAction(actionParams, new HyperTrackCallback() {
             @Override
