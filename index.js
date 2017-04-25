@@ -45,7 +45,7 @@ module.exports = {
 
     // create and assign action
     createAndAssignAction(actionParams, successCallback, errorCallback) {
-        // actionParams is a dictionary
+        // actionParams is a dictionary with keys
         RNHyperTrack.createAndAssignAction(actionParams, successCallback, errorCallback);
     },
 
