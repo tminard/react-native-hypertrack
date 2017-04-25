@@ -31,9 +31,10 @@ import com.hypertrack.lib.HyperTrack;
 import com.hypertrack.lib.HyperTrackConstants;
 import com.hypertrack.lib.callbacks.HyperTrackCallback;
 import com.hypertrack.lib.callbacks.HyperTrackEventCallback;
-import com.hypertrack.lib.internal.transmitter.models.HyperTrackLocation;
-import com.hypertrack.lib.internal.common.models.GeoJSONLocation;
 import com.hypertrack.lib.internal.transmitter.models.HyperTrackEvent;
+import com.hypertrack.lib.models.Place;
+import com.hypertrack.lib.models.ActionParams;
+import com.hypertrack.lib.models.ActionParamsBuilder;
 import com.hypertrack.lib.models.ErrorResponse;
 import com.hypertrack.lib.models.SuccessResponse;
 
@@ -131,15 +132,14 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void completeAction(String actionId) {
-        HyperTrack.completeAction(actionId);
-    }
+    public void createAndAssignAction(final Callback successCallback, final Callback errorCallback) {
+        // TODO
+        ActionParams actionParams = new ActionParamsBuilder().build();
 
-    @ReactMethod
-    public void stopTracking(final Callback successCallback, final Callback errorCallback) {
-        HyperTrack.stopTracking(new HyperTrackCallback() {
+        HyperTrack.createAndAssignAction(actionParams, new HyperTrackCallback() {
             @Override
             public void onSuccess(@NonNull SuccessResponse response) {
+                // Return User object in successCallback
                 successCallback.invoke(response.getResponseObject());
             }
 
@@ -148,6 +148,16 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
                 errorCallback.invoke(errorResponse);
             }
         });
+    }
+
+    @ReactMethod
+    public void completeAction(String actionId) {
+        HyperTrack.completeAction(actionId);
+    }
+
+    @ReactMethod
+    public void stopTracking() {
+        HyperTrack.stopTracking();
     }
 
     @Override
@@ -175,15 +185,6 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
         return arrayList;
     }
 
-    private void sendCurrentLocation(HyperTrackLocation hyperTrackLocation) {
-        WritableMap params = Arguments.createMap();
-        GeoJSONLocation location = hyperTrackLocation.getGeoJSONLocation();
-
-        params.putDouble("latitude", location.getLatitude());
-        params.putDouble("longitude", location.getLongitude());
-        sendEvent("currentLocationDidChange", params);
-    }
-
     private void sendEvent(String eventName, WritableMap params) {
         getReactApplicationContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -195,10 +196,7 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
 
         public void onReceive(Context paramContext, Intent paramIntent) {
              if (paramIntent.getAction().equals(HyperTrackConstants.HT_USER_CURRENT_LOCATION_INTENT)) {
-                 HyperTrackLocation location = (HyperTrackLocation) paramIntent.getSerializableExtra(
-                         HyperTrackConstants.HT_USER_CURRENT_LOCATION_KEY);
-
-                 RNHyperTrackModule.this.sendCurrentLocation(location);
+                 // TODO - send current location
              }
         }
     }

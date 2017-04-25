@@ -34,13 +34,19 @@ module.exports = {
     },
 
     // start tracking
-    stopTracking(successCallback, errorCallback) {
-        RNHyperTrack.stopTracking(successCallback, errorCallback);
+    stopTracking() {
+        RNHyperTrack.stopTracking();
     },
 
     // get tracking status
     isTracking(callback) {
         RNHyperTrack.isTracking(callback);
+    },
+
+    // create and assign action
+    createAndAssignAction(actionParams, successCallback, errorCallback) {
+        // actionParams is a dictionary with keys
+        RNHyperTrack.createAndAssignAction(actionParams, successCallback, errorCallback);
     },
 
     // Method to complete an action
