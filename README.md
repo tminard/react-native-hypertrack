@@ -3,8 +3,8 @@ React native module for hypertrack-android and hypertrack-ios SDKs. Methods in t
 
 [![Slack Status](http://slack.hypertrack.io/badge.svg)](http://slack.hypertrack.io) [![npm version](https://badge.fury.io/js/react-native-hypertrack.svg)](https://badge.fury.io/js/react-native-hypertrack)
 
-## What's new in v0.4.+
-The v0.4.+ wrapper is built for HyperTrack v3, and will not work with the older SDKs. There will be breaking changes if you are upgrading - please refer to [docs.hypertrack.com](https://docs.hypertrack.com).
+## What's new in v1.x
+The v1.x wrapper is built for HyperTrack v3, and will not work with the older SDKs. There will be breaking changes if you are upgrading - please refer to [docs.hypertrack.com](https://docs.hypertrack.com).
 
 ## Getting started
 In your project directory, install and link the module package from npm.
@@ -26,13 +26,6 @@ allprojects {
         maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
     }
 }
-```
-
-In your `android/app/build.gradle` file, update the following:
-
-```
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
 ```
 
 If you have some issues with Android, some common troubleshooting is [here](android-troubleshooting.md).
@@ -59,7 +52,7 @@ If you have some issues with Android, some common troubleshooting is [here](andr
 
 ## Usage
 
-#### Import and initialize SDK with your Publishable key before making any other API call
+#### 1. Initialize the SDK
 
 ```javascript
  import RNHyperTrack from 'react-native-hypertrack';
@@ -69,55 +62,50 @@ If you have some issues with Android, some common troubleshooting is [here](andr
    constructor() {
      super();
      // Initialize HyperTrack wrapper
-     RNHyperTrack.initialize(config.HT_PUBLISHABLE_KEY);
+     RNHyperTrack.initialize("YOUR_PUBLISHABLE_KEY");
    }
  }
   ...
 ```
-#### Starting a Trip
-```javascript
- RNHyperTrack.startTrip(
-   DRIVER_ID,
-   [TASK_ID_1, TASK_ID_2...],
-   (successValue) => {
-     // Handle Success
-   },
-   (error) => {
-     // Handle error
-   }
- );
-```
-#### Completing a task
 
+#### 2. Set or create user
+If you have a [user](https://docs.hypertrack.com/v3/api/entities/user.html) that is to be associated with this device, set the user id.
 ```javascript
- RNHyperTrack.completeTask(
-   TASK_ID,
-   (successValue) => {
-      // Handle Success
-   },
-   (error) => {
-     // Handle error
-   }
- );
+RNHyperTrack.setUserId("YOUR_USER_ID");
 ```
 
-#### Ending a trip
+In case you do not have a user, you can create a new user. Calling this will automatically set the user in the SDK.
+
 ```javascript
- RNHyperTrack.endTrip(
-   TRIP_ID,
-   (successValue) => {
-     // Handle success
-   },
-   (error) => {
-     // Handle error
-   }      
- );
+RNHyperTrack.createUser("USER_NAME", (success) => {}, (error) => {});
 ```
+
+#### 3. Start tracking
+To start tracking on the SDK, use the following method.
+
+```javascript
+RNHyperTrack.startTracking((success) => {}, (error) => {});
+```
+
+#### Stop tracking
+To stop tracking on the SDK, use the following method.
+
+```javascript
+RNHyperTrack.stopTracking();
+```
+
+#### 5. Completing an action
+If you are using actions for your use-case, you can complete actions through the SDK.
+
+```javascript
+RNHyperTrack.completeAction("YOUR_ACTION_ID");
+```
+
 ## Documentation
-The HyperTrack documentation is at [docs.hypertrack.io](http://docs.hypertrack.io/).
+The HyperTrack documentation is at [docs.hypertrack.com](http://docs.hypertrack.com/).
 
 ## Support
-For any questions, please reach out to us on [Slack](http://docs.hypertrack.io/) or on help@hypertrack.io. Please create an [issue](https://github.com/hypertrack/hypertrack-cordova/issues) for bugs or feature requests.
+For any questions, please reach out to us on [Slack](http://slack.hypertrack.io/) or on help@hypertrack.io. Please create an [issue](https://github.com/hypertrack/hypertrack-cordova/issues) for bugs or feature requests.
 
 ## Acknowledgements
 Thanks to [react-native-create-library](https://github.com/frostney/react-native-create-library) which saved a few hours.

@@ -156,18 +156,8 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
-    public void stopTracking(final Callback successCallback, final Callback errorCallback) {
-        HyperTrack.stopTracking(new HyperTrackCallback() {
-            @Override
-            public void onSuccess(@NonNull SuccessResponse response) {
-                successCallback.invoke(response.getResponseObject());
-            }
-
-            @Override
-            public void onError(@NonNull ErrorResponse errorResponse) {
-                errorCallback.invoke(errorResponse);
-            }
-        });
+    public void stopTracking() {
+        HyperTrack.stopTracking();
     }
 
     @Override

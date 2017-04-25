@@ -34,8 +34,8 @@ module.exports = {
     },
 
     // start tracking
-    stopTracking(successCallback, errorCallback) {
-        RNHyperTrack.stopTracking(successCallback, errorCallback);
+    stopTracking() {
+        RNHyperTrack.stopTracking();
     },
 
     // get tracking status
