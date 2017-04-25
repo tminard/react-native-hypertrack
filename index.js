@@ -43,6 +43,12 @@ module.exports = {
         RNHyperTrack.isTracking(callback);
     },
 
+    // create and assign action
+    createAndAssignAction(actionParams, successCallback, errorCallback) {
+        // actionParams is a dictionary
+        RNHyperTrack.createAndAssignAction(actionParams, successCallback, errorCallback);
+    },
+
     // Method to complete an action
     completeAction(actionId) {
         RNHyperTrack.completeAction(actionId);
